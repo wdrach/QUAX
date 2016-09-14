@@ -1,0 +1,11 @@
+<section class="modal-overlay" ng-click="reject()"></section>
+<section class="modal-container">
+  <section class="modal-content">
+    <h1 class="modal-heading">{{content.heading}}</h1>
+    <p class="modal-info" ng-bind-html="content.info"></p>
+  </section>
+  <section class="modal-actions">
+    <button class="modal-action--secondary" ng-click="reject()">{{content.actionSecondary}}</button>
+    <button class="modal-action--primary" ng-click="accept()" ng-if="!content.input">{{content.actionPrimary}}</button>
+  </section>
+</section>

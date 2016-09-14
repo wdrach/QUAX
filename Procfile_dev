@@ -1,0 +1,1 @@
+web: nodemon --watch server server/app.js

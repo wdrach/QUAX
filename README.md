@@ -1,2 +1,9 @@
 # QUAX
-The Quantitative Ultimate Analysis eXtractor, QUAX, is a tool for fine tuned quantitative analysis.
+It's a thing, that does stuff. Financial stuff, cool stuff, like making you money and stuff.
+
+## Run
+    $ sudo npm install -g foreman webpack
+    $ npm install
+    $ nf start -j Procfile_dev
+
+This will watch for changes and update.

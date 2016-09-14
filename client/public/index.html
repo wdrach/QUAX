@@ -1,0 +1,32 @@
+<!doctype html>
+<html ng-app="app" ng-controller="AppController">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <head>
+        <meta charset="utf-8">
+        <base href="/"></base>
+        <title>Sphecius</title>
+        <meta name="description" content="Go forth.">
+        <link rel="prefetch" href="">
+        <link rel="icon" type="image/png" href="img/favicon.png" />
+        <meta property="og:site_name" content="Sphecius"/>
+        <meta property="og:description" content="Go forth."/>
+        <meta property="og:image" content=""/>
+        <meta property="og:url" content="" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Sphecius" />
+       
+        <link href="https://fonts.googleapis.com/css?family=Fira+Mono|Fira+Sans" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/css/style.css">
+    </head>
+    <body class="body" ng-mousemove="mouseMove($event)">
+
+        <section class="main is-{{$state.current.name}}" ui-view>
+        </section>
+
+        <section class="modal" ng-controller="ModalCtrl" ng-show="SHOW_MODAL" ng-include="'templates/app/modal.html'">
+        </section>
+
+        <!-- Compiled build -->
+        <script src="bundle.js"></script>
+    </body>
+</html>

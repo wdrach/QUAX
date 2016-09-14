@@ -1,0 +1,92 @@
+.body {
+  background-color: #1F1F1F;
+  color: #FFFFFF;
+}
+
+.logo--center {
+  font-family: 'Fira Sans', sans-serif;
+  text-align: center;
+  margin: auto;
+  font-size: 250%;
+}
+
+/* root */
+.root {
+  font-family: 'Fira Sans', sans-serif;
+}
+
+.root-content {
+  margin: auto;
+  text-align: center;
+}
+
+.root-title {
+  margin-top: 5rem;
+  font-size: 175%;
+}
+
+.root-subtitle {
+  margin: auto;
+  font-size: 100%;
+  width: 100%;
+  max-width: 30rem;
+}
+
+.root-action {
+  margin: auto;
+  margin-top: 3rem;
+  border: none;
+  display: block;
+  color: #1F1F1F;
+  background: #FFFFFF;
+  font-size: 125%;
+}
+
+.root-action:hover {
+  color: #FFFFFF;
+  background: #1F1F1F;
+  border: 2px #FFFFFF solid;
+  border-radius: 0px;
+}
+
+/* modal */
+.modal-overlay {
+}
+
+.modal-container {
+}
+
+.modal-content {
+}
+
+.modal-heading {
+}
+
+.modal-info {
+}
+
+.modal-actions {
+}
+
+.modal-action--secondary {
+}
+
+.modal-action--primary {
+}
+
+/* term */
+.term {
+  font-family: 'Fira Mono', monospace;
+}
+
+.term-text {
+  width: 100%;
+}
+
+.term-input {
+  background: #1F1F1F;
+  border: none;
+  width: 100%;
+  color: #FFFFFF;
+}
+

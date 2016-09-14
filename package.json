@@ -1,0 +1,39 @@
+{
+  "name": "QUAX",
+  "version": "0.0.1",
+  "description": "The ultimate tool for extracting quantitative analysis.",
+  "main": "server/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wdrach/QUAX.git"
+  },
+  "keywords": [
+    "game",
+    "web"
+  ],
+  "author": "WDD",
+  "license": "Beerware",
+  "bugs": {
+    "url": "https://github.com/wdrach/QUAX/issues"
+  },
+  "homepage": "https://github.com/wdrach/QUAX#readme",
+  "dependencies": {
+    "angular": "^1.5.7",
+    "angular-animate": "^1.5.7",
+    "angular-cookies": "^1.5.7",
+    "angular-sanitize": "^1.5.7",
+    "angular-touch": "^1.5.7",
+    "angular-ui-router": "^0.3.1",
+    "body-parser": "^1.15.1",
+    "dotenv": "^2.0.0",
+    "errorhandler": "^1.4.3",
+    "express": "^4.14.0",
+    "file-loader": "^0.8.5",
+    "html-loader": "^0.4.3",
+    "morgan": "^1.7.0",
+    "webpack": "^1.13.1"
+  }
+}
