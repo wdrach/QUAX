@@ -11,7 +11,7 @@ module.exports = {
   module: {
     loaders: [
       {test: /\.html$/, loaders: ["html"]},
-      {test: /\.(gif|svg|ttf|eot)$/, loaders ["file"]}
+      {test: /\.(gif|svg|ttf|eot)$/, loaders: ["file"]}
     ]
   },
 
