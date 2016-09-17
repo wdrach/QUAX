@@ -1,10 +1,10 @@
 .body {
-  background-color: #1F1F1F;
-  color: #FFFFFF;
+  background-color: #FFFFFF;
+  color: #1F1F1F;
 }
 
 .logo--center {
-  font-family: 'Fira Sans', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   text-align: center;
   margin: auto;
   font-size: 250%;
@@ -12,7 +12,7 @@
 
 /* root */
 .root {
-  font-family: 'Fira Sans', sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .root-content {
@@ -37,15 +37,15 @@
   margin-top: 3rem;
   border: none;
   display: block;
-  color: #1F1F1F;
-  background: #FFFFFF;
+  color: #FFFFFF;
+  background: #1F1F1F;
   font-size: 125%;
 }
 
 .root-action:hover {
-  color: #FFFFFF;
-  background: #1F1F1F;
-  border: 2px #FFFFFF solid;
+  color: #1F1F1F;
+  background: #FFFFFF;
+  border: 2px #1F1F1F solid;
   border-radius: 0px;
 }
 
@@ -73,20 +73,3 @@
 
 .modal-action--primary {
 }
-
-/* term */
-.term {
-  font-family: 'Fira Mono', monospace;
-}
-
-.term-text {
-  width: 100%;
-}
-
-.term-input {
-  background: #1F1F1F;
-  border: none;
-  width: 100%;
-  color: #FFFFFF;
-}
-
