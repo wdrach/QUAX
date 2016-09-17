@@ -75,24 +75,48 @@
 	    // - Routes
 	    $stateProvider
 	        .state('root', {
-	            url: '/',
-	            template: __webpack_require__(13),
-	            controller: 'RootCtrl'
+	          url: '/',
+	          template: __webpack_require__(13),
+	          controller: 'RootCtrl'
 	        })
-	        .state('login', {
-	          url: '/login',
+	        .state('login-callback', {
+	          url: '/loginCallback/:token',
 	          template: __webpack_require__(14),
-	          controller: 'LoginCtrl'
+	          controller: 'LoginCallbackCtrl'
 	        });
 
 	    // - The main table
 	    $stateProvider
-	        .state('term', {
-	          url: '/table',
-	          template: __webpack_require__(15),
-	          controller: 'TermCtrl'
-	        });
+	      .state('table', {
+	        url: '/table',
+	        template: __webpack_require__(15),
+	        controller: 'TableCtrl',
+	        resolve: {
+	          'currentAuth': ['$q', '$rootScope', 'Auth', function($q, $rootScope, Auth) {
+	            var def = $q.defer();
+	            Auth.getToken().then(function(user) {
+	              $rootScope.loggedIn = true;
+	              def.resolve();
+	            }, function(err) {
+	              $rootScope.loggedIn = false;
+	              def.reject();
+	            });
+
+	            return def.promise;
+	          }]
+	        }
+	      });
 	});
+
+	app.run(['$rootScope', '$state', function($rootScope, $state) {
+	  $rootScope.$on('$stateChangeError', function() {
+	    $state.go('root');
+	  });
+
+	  $rootScope.$on('$stateChangeStart', function() {
+	    return $rootScope.$emit('m.hide');
+	  });
+	}]);
 
 	__webpack_require__(16)(app);
 	__webpack_require__(22)(app);
@@ -42163,7 +42187,7 @@
 /* 15 */
 /***/ function(module, exports) {
 
-	module.exports = "<h1 class=\"logo--center\">QUAX</h1>\n\n";
+	module.exports = "<h1 class=\"logo--center\">QUAX {{loggedIn}}</h1>\n";
 
 /***/ },
 /* 16 */
@@ -42228,12 +42252,23 @@
 
 	module.exports = function(app) {
 	  app.controller('RootCtrl', [
+	    '$rootScope',
 	    '$scope',
 	    '$state',
-	    function($scope, $state) {
+	    '$window',
+	    'Auth',
+	    function($rootScope, $scope, $state, $window, Auth) {
+	      Auth.getToken().then(function() {
+	        $rootScope.loggedIn = true;
+	        $state.go('table');
+	      });
+
+	      if ($rootScope.loggedIn) {
+	        $state.go('table');
+	      }
 
 	      $scope.login = function() {
-	        return $state.go("login");
+	        return $window.location.href = "/auth/google";
 	      };
 
 	    }
@@ -42243,6 +42278,29 @@
 
 /***/ },
 /* 19 */
+/***/ function(module, exports) {
+
+	module.exports = function(app) {
+	  app.controller('LoginCallbackCtrl', [
+	    '$rootScope',
+	    '$scope',
+	    '$stateParams',
+	    '$state',
+	    'Auth',
+	    function($rootScope, $scope, $stateParams, $state, Auth) {
+	      var token = $stateParams.token;
+
+	      Auth.setToken($stateParams.token);
+	      $rootScope.loggedIn = true;
+
+	      $state.go('table');
+	    }
+	  ]);
+	};
+
+
+/***/ },
+/* 20 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42277,24 +42335,22 @@
 
 
 /***/ },
-/* 20 */
-/***/ function(module, exports) {
-
-	module.exports = function(app) {
-	  app.controller('LoginCtrl', [
-	    function() {
-	    }
-	  ]);
-	};
-
-
-/***/ },
 /* 21 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
 	  app.controller('TableCtrl', [
-	    function() {
+	    '$scope',
+	    '$rootScope',
+	    '$state',
+	    function($scope, $rootScope, $state) {
+	      if ($rootScope.loggedIn) {
+	        $scope.text = "hello world";
+	      }
+	      else {
+	        console.error("not logged in");
+	        $state.go('root');
+	      }
 	    }
 	  ]);
 	};
@@ -42306,6 +42362,7 @@
 
 	module.exports = function(app) {
 	  __webpack_require__(23)(app);
+	  __webpack_require__(24)(app);
 	};
 
 
@@ -42330,6 +42387,60 @@
 	      return Modal;
 	  });
 	};
+
+
+/***/ },
+/* 24 */
+/***/ function(module, exports) {
+
+	module.exports = function(app) {
+	  app.factory("Auth", ["$cookies", "$rootScope", "$q", "$http", "$timeout", "$state", function($cookies, $rootScope, $q, $http, $timeout, $state) {
+	    var Auth = {};
+
+	    Auth.getToken = function() {
+	      var deferred = $q.defer();
+	      if ($rootScope.token) {
+	        deferred.resolve($rootScope.token);
+	        return deferred.promise;
+	      }
+
+	      var token = $cookies.get('token');
+	      if (token) {
+	        deferred.resolve(token);
+	        $rootScope.token = token;
+	        return deferred.promise;
+	      }
+
+	      $timeout(function() {
+	        token = $cookies.get('token');
+	        if (token) {
+	          deferred.resolve(token);
+	          $rootScope.token = token;
+	          return deferred.promise;
+	        }
+
+	        deferred.reject(false);
+	      }, 100);
+
+	      return deferred.promise;
+	    }
+
+	    Auth.setToken = function(token) {
+	      $cookies.put("token", token);
+	      $rootScope.token = token;
+	      return;
+	    }
+
+	    Auth.logout = function() {
+	      $cookies.remove('token');
+	      if ($rootScope.token) delete $rootScope.token;
+	      $state.go('root');
+	      window.location.reload();
+	    }
+
+	    return Auth;
+	  }]);
+	}
 
 
 /***/ }

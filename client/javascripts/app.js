@@ -29,24 +29,48 @@ app.config(function($urlRouterProvider, $stateProvider, $httpProvider, $anchorSc
     // - Routes
     $stateProvider
         .state('root', {
-            url: '/',
-            template: require('../public/templates/app/root.html'),
-            controller: 'RootCtrl'
+          url: '/',
+          template: require('../public/templates/app/root.html'),
+          controller: 'RootCtrl'
         })
-        .state('login', {
-          url: '/login',
+        .state('login-callback', {
+          url: '/loginCallback/:token',
           template: require('../public/templates/app/login.html'),
-          controller: 'LoginCtrl'
+          controller: 'LoginCallbackCtrl'
         });
 
     // - The main table
     $stateProvider
-        .state('term', {
-          url: '/table',
-          template: require('../public/templates/table/table.html'),
-          controller: 'TermCtrl'
-        });
+      .state('table', {
+        url: '/table',
+        template: require('../public/templates/table/table.html'),
+        controller: 'TableCtrl',
+        resolve: {
+          'currentAuth': ['$q', '$rootScope', 'Auth', function($q, $rootScope, Auth) {
+            var def = $q.defer();
+            Auth.getToken().then(function(user) {
+              $rootScope.loggedIn = true;
+              def.resolve();
+            }, function(err) {
+              $rootScope.loggedIn = false;
+              def.reject();
+            });
+
+            return def.promise;
+          }]
+        }
+      });
 });
+
+app.run(['$rootScope', '$state', function($rootScope, $state) {
+  $rootScope.$on('$stateChangeError', function() {
+    $state.go('root');
+  });
+
+  $rootScope.$on('$stateChangeStart', function() {
+    return $rootScope.$emit('m.hide');
+  });
+}]);
 
 require('./controllers')(app);
 require('./services')(app);

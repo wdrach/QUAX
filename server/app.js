@@ -4,13 +4,15 @@ var express = require('express')
   , bodyParser = require('body-parser')
   , http = require('http')
   , path = require('path')
-  , webpack = require('webpack');
+  , webpack = require('webpack')
+  , passport = require('./helpers/auth.helper')();
 
 var webpackConfigLocation = process.env.NODE_ENV !== 'production' ? '../webpack.config.dev.js' : '../webpack.config.prod.js';
 console.log("Loading webpack config: " + webpackConfigLocation);
 var webpackConfig = require(webpackConfigLocation);
 
 var apiRouter = require('./routes/api.routes');
+var authRouter = require('./routes/auth.routes');
 
 var app = express();
 
@@ -22,6 +24,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //api router
 app.use('/api', apiRouter);
+
+app.use('/auth', authRouter(passport));
 
 app.use(function(req, res) {
   res.sendFile(path.join(__dirname, '../client/public/index.html'));
