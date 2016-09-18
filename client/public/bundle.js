@@ -83,13 +83,18 @@
 	          url: '/loginCallback/:token',
 	          template: __webpack_require__(14),
 	          controller: 'LoginCallbackCtrl'
+	        })
+	        .state('fail', {
+	          url: '/fail',
+	          template: __webpack_require__(15),
+	          controller: 'FailCtrl'
 	        });
 
 	    // - The main table
 	    $stateProvider
 	      .state('table', {
 	        url: '/table',
-	        template: __webpack_require__(15),
+	        template: __webpack_require__(16),
 	        controller: 'TableCtrl',
 	        resolve: {
 	          'currentAuth': ['$q', '$rootScope', 'Auth', function($q, $rootScope, Auth) {
@@ -118,8 +123,8 @@
 	  });
 	}]);
 
-	__webpack_require__(16)(app);
-	__webpack_require__(22)(app);
+	__webpack_require__(17)(app);
+	__webpack_require__(24)(app);
 
 
 /***/ },
@@ -42175,7 +42180,7 @@
 /* 13 */
 /***/ function(module, exports) {
 
-	module.exports = "<h1 class=\"logo--center\">QUAX</h1>\n\n<section class=\"root\">\n  <div class=\"root-content\">\n    <h1 class=\"root-title\">Quantitative Ultimate Analysis eXtractor</h1>\n    <h2 class=\"root-subtitle\">Only authorized users are allowed.</h2>\n    <button ng-click=\"login()\" class=\"root-action\" type=\"button\" name=\"button\">Proceed.</button>\n  </div>\n</section>\n";
+	module.exports = "\n<section class=\"root\">\n  <div class=\"content\">\n    <img src=\"/coolduck.png\"/>\n    <h1 class=\"title\">QUAX</h1>\n    <h2 class=\"subtitle\">Cool ducks only.</h2>\n    <button ng-click=\"login()\" class=\"action\" type=\"button\" name=\"button\">ENTER</button>\n  </div>\n</section>\n";
 
 /***/ },
 /* 14 */
@@ -42187,23 +42192,30 @@
 /* 15 */
 /***/ function(module, exports) {
 
-	module.exports = "<h1 class=\"logo--center\">QUAX {{loggedIn}}</h1>\n";
+	module.exports = "\n<section class=\"root\">\n  <div class=\"content\">\n    <img src=\"/failduck.png\"/>\n    <h2 class=\"subtitle\">\n      You're not a cool duck.\n      <br>\n      Mr. Quackers will escort you out.\n    </h2>\n    <button ng-click=\"login()\" class=\"action\" type=\"button\" name=\"button\">\n      Try Again\n    </button>\n    <button ng-click=\"goHome()\" class=\"blue-action\" type=\"button\" name=\"button\">\n      Go Home\n    </button>\n  </div>\n</section>\n";
 
 /***/ },
 /* 16 */
+/***/ function(module, exports) {
+
+	module.exports = "<h1 class=\"logo--center\">QUAX {{loggedIn}}</h1>\n";
+
+/***/ },
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(app) {
-	  __webpack_require__(17)(app);
 	  __webpack_require__(18)(app);
 	  __webpack_require__(19)(app);
 	  __webpack_require__(20)(app);
 	  __webpack_require__(21)(app);
+	  __webpack_require__(22)(app);
+	  __webpack_require__(23)(app);
 	};
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42247,7 +42259,41 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
+/***/ function(module, exports) {
+
+	module.exports = function(app) {
+	  app.controller('FailCtrl', [
+	    '$rootScope',
+	    '$scope',
+	    '$state',
+	    '$window',
+	    'Auth',
+	    function($rootScope, $scope, $state, $window, Auth) {
+	      Auth.getToken().then(function() {
+	        $rootScope.loggedIn = true;
+	        $state.go('table');
+	      });
+
+	      if ($rootScope.loggedIn) {
+	        $state.go('table');
+	      };
+
+	      $scope.login = function() {
+	        return $window.location.href = "/auth/google";
+	      };
+
+	      $scope.goHome = function() {
+	        $state.go('root');
+	      };
+
+	    }
+	  ]);
+	};
+
+
+/***/ },
+/* 20 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42277,7 +42323,7 @@
 
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42300,7 +42346,7 @@
 
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42335,7 +42381,7 @@
 
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42357,17 +42403,17 @@
 
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(app) {
-	  __webpack_require__(23)(app);
-	  __webpack_require__(24)(app);
+	  __webpack_require__(25)(app);
+	  __webpack_require__(26)(app);
 	};
 
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42390,7 +42436,7 @@
 
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {

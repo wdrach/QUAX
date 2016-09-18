@@ -4,46 +4,65 @@
 }
 
 .logo--center {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Lato', sans-serif;
   text-align: center;
   margin: auto;
   font-size: 250%;
 }
 
-/* root */
 .root {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Lato', sans-serif;
 }
 
-.root-content {
+.content {
   margin: auto;
   text-align: center;
 }
 
-.root-title {
-  margin-top: 5rem;
-  font-size: 175%;
+.title {
+  font-family: 'Lato', sans-serif;
+  margin-top: 1rem;
+  font-size: 200%;
 }
 
-.root-subtitle {
+.subtitle {
   margin: auto;
   font-size: 100%;
   width: 100%;
   max-width: 30rem;
 }
 
-.root-action {
+.action {
   margin: auto;
   margin-top: 3rem;
+  padding: .5rem 1rem .5rem 1rem;
   border: none;
   display: block;
   color: #FFFFFF;
-  background: #1F1F1F;
+  background: #F45D30;
   font-size: 125%;
 }
 
-.root-action:hover {
-  color: #1F1F1F;
+.action:hover {
+  color: #F45D30;
+  background: #FFFFFF;
+  border: 2px #1F1F1F solid;
+  border-radius: 0px;
+}
+
+.blue-action {
+  margin: auto;
+  margin-top: 3rem;
+  padding: .5rem 1rem .5rem 1rem;
+  border: none;
+  display: block;
+  color: #FFFFFF;
+  background: #072C50;
+  font-size: 125%;
+}
+
+.blue-action:hover {
+  color: #072C50;
   background: #FFFFFF;
   border: 2px #1F1F1F solid;
   border-radius: 0px;

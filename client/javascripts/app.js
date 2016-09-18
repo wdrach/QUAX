@@ -37,6 +37,11 @@ app.config(function($urlRouterProvider, $stateProvider, $httpProvider, $anchorSc
           url: '/loginCallback/:token',
           template: require('../public/templates/app/login.html'),
           controller: 'LoginCallbackCtrl'
+        })
+        .state('fail', {
+          url: '/fail',
+          template: require('../public/templates/app/fail.html'),
+          controller: 'FailCtrl'
         });
 
     // - The main table
