@@ -4,13 +4,15 @@ module.exports = function(app) {
     '$rootScope',
     '$state',
     function($scope, $rootScope, $state) {
-      if ($rootScope.loggedIn) {
-        $scope.text = "hello world";
-      }
-      else {
+      if (!$rootScope.loggedIn) {
         console.error("not logged in");
         $state.go('root');
       }
+
+      var rows = ['Symbols'];
+      config.components.forEach(function(elem) {
+        rows.push(elem);
+      });
     }
   ]);
 };
