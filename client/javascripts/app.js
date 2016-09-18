@@ -51,12 +51,12 @@ app.config(function($urlRouterProvider, $stateProvider, $httpProvider, $anchorSc
         template: require('../public/templates/table/table.html'),
         controller: 'TableCtrl',
         resolve: {
-          'currentAuth': ['$q', '$rootScope', 'Auth', function($q, $rootScope, Auth) {
+          'currentAuth': ['$q', '$rootScope', 'Backend', function($q, $rootScope, Backend) {
             var def = $q.defer();
-            Auth.getToken().then(function(user) {
+            Backend.loggedIn().then(function() {
               $rootScope.loggedIn = true;
               def.resolve();
-            }, function(err) {
+            }, function() {
               $rootScope.loggedIn = false;
               def.reject();
             });

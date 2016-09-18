@@ -97,12 +97,12 @@
 	        template: __webpack_require__(16),
 	        controller: 'TableCtrl',
 	        resolve: {
-	          'currentAuth': ['$q', '$rootScope', 'Auth', function($q, $rootScope, Auth) {
+	          'currentAuth': ['$q', '$rootScope', 'Backend', function($q, $rootScope, Backend) {
 	            var def = $q.defer();
-	            Auth.getToken().then(function(user) {
+	            Backend.loggedIn().then(function() {
 	              $rootScope.loggedIn = true;
 	              def.resolve();
-	            }, function(err) {
+	            }, function() {
 	              $rootScope.loggedIn = false;
 	              def.reject();
 	            });
@@ -42302,18 +42302,14 @@
 	    '$scope',
 	    '$state',
 	    '$window',
-	    'Auth',
-	    function($rootScope, $scope, $state, $window, Auth) {
-	      Auth.getToken().then(function() {
+	    'Backend',
+	    function($rootScope, $scope, $state, $window, Backend) {
+	      Backend.loggedIn().then(function() {
 	        $rootScope.loggedIn = true;
-	        $state.go('table');
 	      });
 
-	      if ($rootScope.loggedIn) {
-	        $state.go('table');
-	      }
-
 	      $scope.login = function() {
+	        if ($rootScope.loggedIn) return $state.go('table');
 	        return $window.location.href = "/auth/google";
 	      };
 
@@ -42409,34 +42405,12 @@
 	module.exports = function(app) {
 	  __webpack_require__(25)(app);
 	  __webpack_require__(26)(app);
+	  __webpack_require__(27)(app);
 	};
 
 
 /***/ },
 /* 25 */
-/***/ function(module, exports) {
-
-	module.exports = function(app) {
-	  app.service('Modal', function($rootScope) {
-	      var Modal = {};
-
-	      Modal.create = function(data, promise) {
-	        $rootScope.$emit('m.create', data);
-	        $rootScope.$on('m.accepted', function(){
-	          promise.resolve();
-	        });
-	        $rootScope.$on('m.rejected', function(){
-	          promise.reject();
-	        });
-	      };
-
-	      return Modal;
-	  });
-	};
-
-
-/***/ },
-/* 26 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42487,6 +42461,106 @@
 	    return Auth;
 	  }]);
 	}
+
+
+/***/ },
+/* 26 */
+/***/ function(module, exports) {
+
+	module.exports = function (app) {
+	  app.service('Backend', function ($cookies, $http, $state, $rootScope, $q, Auth) {
+	    var Backend = {};
+
+	    var get = function(uri) {
+	      var deferred = $q.defer();
+	      Auth.getToken().then(function(token) {
+	        $http.get(uri + '?access_token=' + token)
+	             .then(function(data) {
+	               deferred.resolve(data);
+	             }, function(response) {
+	               deferred.reject();
+	             });
+	      }, function(err) {
+	        return deferred.reject(err);
+	      });
+	      return deferred.promise;
+	    }
+
+	    var del = function(uri) {
+	      var deferred = $q.defer();
+	      Auth.getToken().then(function(token) {
+	        $http.delete(uri + '?access_token=' + token)
+	             .then(function(data) {
+	               deferred.resolve(data);
+	             }, function(response) {
+	               deferred.reject();
+	             });
+	      }, function(err) {
+	        return deferred.reject(err);
+	      });
+	      return deferred.promise;
+	    }
+
+	    var put = function(uri, body) {
+	      var deferred = $q.defer();
+	      Auth.getToken().then(function(token) {
+	        $http.put(uri + '?access_token=' + token, body)
+	             .then(function(data) {
+	               deferred.resolve(data);
+	             }, function(response) {
+	               deferred.reject();
+	             });
+	      }, function(err) {
+	        return deferred.reject(err);
+	      });
+	      return deferred.promise;
+	    }
+
+	    var post = function(uri, body) {
+	      var deferred = $q.defer();
+	      Auth.getToken().then(function(token) {
+	        $http.post(uri + '?access_token=' + token, body)
+	             .then(function(data) {
+	               deferred.resolve(data);
+	             }, function(response) {
+	               deferred.reject();
+	             });
+	      }, function(err) {
+	        return deferred.reject(err);
+	      });
+	      return deferred.promise;
+	    }
+
+	    Backend.loggedIn = function () {
+	      return get('/api/loggedIn');
+	    };
+
+	    return Backend;
+	  });
+	};
+
+
+/***/ },
+/* 27 */
+/***/ function(module, exports) {
+
+	module.exports = function(app) {
+	  app.service('Modal', function($rootScope) {
+	      var Modal = {};
+
+	      Modal.create = function(data, promise) {
+	        $rootScope.$emit('m.create', data);
+	        $rootScope.$on('m.accepted', function(){
+	          promise.resolve();
+	        });
+	        $rootScope.$on('m.rejected', function(){
+	          promise.reject();
+	        });
+	      };
+
+	      return Modal;
+	  });
+	};
 
 
 /***/ }

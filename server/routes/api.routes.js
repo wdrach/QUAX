@@ -1,6 +1,9 @@
 var router = require('express').Router();
-var TestController = require('../controllers/test.controller');
+var UserController = require('../controllers/user.controller');
 
-router.route('/test').get(TestController.test);
+module.exports = function(passport) {
+  router.use(passport.authenticate('bearer'));
 
-module.exports = router;
+  router.route('/loggedIn').get(UserController.loggedIn);
+  return router;
+}

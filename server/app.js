@@ -1,5 +1,6 @@
 var express = require('express')
   , logger = require('morgan')
+  , expressSession = require('express-session')
   , errorHandler = require('errorhandler')
   , bodyParser = require('body-parser')
   , http = require('http')
@@ -20,10 +21,17 @@ app.set('port', process.env.PORT || 4000);
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, '../client/public')));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(expressSession({
+  secret: 'himother',
+  saveUninitialized: false,
+  resave: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 //api router
-app.use('/api', apiRouter);
+app.use('/api', apiRouter(passport));
 
 app.use('/auth', authRouter(passport));
 

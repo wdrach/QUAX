@@ -4,18 +4,14 @@ module.exports = function(app) {
     '$scope',
     '$state',
     '$window',
-    'Auth',
-    function($rootScope, $scope, $state, $window, Auth) {
-      Auth.getToken().then(function() {
+    'Backend',
+    function($rootScope, $scope, $state, $window, Backend) {
+      Backend.loggedIn().then(function() {
         $rootScope.loggedIn = true;
-        $state.go('table');
       });
 
-      if ($rootScope.loggedIn) {
-        $state.go('table');
-      }
-
       $scope.login = function() {
+        if ($rootScope.loggedIn) return $state.go('table');
         return $window.location.href = "/auth/google";
       };
 

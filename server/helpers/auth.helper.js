@@ -23,7 +23,6 @@ function genToken(cb) {
 function tokenCB() {
   return function(accessToken, refreshToken, profile, done) {
     var email = profile.emails[0].value;
-    console.log(email);
 
     if (!accepted_users[email]) return done(null, false);
 
@@ -66,8 +65,8 @@ module.exports = function() {
     if (!token) return cb(null, false);
     for (var key in users) {
       if (users[key].token === token) return cb(null, users[key]);
-      return cb(null, false);
     }
+    return cb(null, false);
   }));
 
 	return passport;
