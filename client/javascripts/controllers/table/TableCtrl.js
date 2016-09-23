@@ -40,7 +40,8 @@ module.exports = function(app) {
 
       Backend.getTable($scope.date).then(function(data) {
         $scope.table = data.data;
-        listTable();
+        console.log(table);
+        //listTable();
       });
     }
   ]);
