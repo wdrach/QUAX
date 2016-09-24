@@ -14,6 +14,7 @@ module.exports = function(app) {
       //test (only for date !== now) for equal equity in each metric
       //weight for weighing metrics
       $scope.mode = 'base';
+
       //now for this last Monday
       //YYYYMMDD for any other date
       $scope.date = 'now';
@@ -22,26 +23,25 @@ module.exports = function(app) {
 
       var pastLabels = ['Symbol', 'Quality', 'Value', 'Implied Volatility', 'Momentum', 'Current Price', 'Future Price', 'Percent Difference'];
 
-      $scope.displayTable = [labels];
+      $scope.displayTable = [];
+      $scope.labels = labels;
 
-      function listTable() {
+      function listTable(givenTable) {
         if ($scope.date === 'now') {
-          var table = [labels];
-          for (var key in $scope.table) {
-            var entry = $scope.table[key];
-            table.push([key, entry.Q, entry.V, entry.IV, entry.M, entry.price]);
+          $scope.labels = labels;
+          var table = [];
+          for (var key in givenTable) {
+            var entry = givenTable[key];
+            if (entry.symbol && entry.symbol[0] !== '_') {
+              table.push([entry.symbol, entry.Q, entry.V, entry.IV, entry.M, entry.price]);
+            }
           }
-          $displayTable = table;
-        }
-        else {
-          var table = [pastLabels];
+          $scope.displayTable = table;
         }
       }
 
       Backend.getTable($scope.date).then(function(data) {
-        $scope.table = data.data;
-        console.log(table);
-        //listTable();
+        listTable(data.data);
       });
     }
   ]);

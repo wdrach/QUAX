@@ -92,6 +92,7 @@ module.exports.getTable = (req, res) => {
 
         var labels = output[0];
         var clean = [];
+        var symbols = [];
 
         output.forEach(function(elem, i) {
           //ignore the labels
@@ -125,7 +126,10 @@ module.exports.getTable = (req, res) => {
             entry[label] = parseFloat(elem[j]);
           });
 
-          clean.push(entry);
+          if (entry.symbol && entry.symbol !== 'RIY' && symbols.indexOf(entry.symbol) === -1) {
+            clean.push(entry);
+            symbols.push(entry.symbol);
+          }
         });
 
         console.log(JSON.stringify(clean, null, 2));
