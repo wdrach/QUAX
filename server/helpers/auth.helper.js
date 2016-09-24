@@ -60,8 +60,18 @@ module.exports = function() {
   },
   tokenCB('google')));
 
-  //simply looks up the token in the DB and returns the user
   passport.use(new TokenStrategy(function (token, cb) {
+
+    //since login isn't actually DB based, this allows me
+    //to be always logged in when developing. Should be secure.
+    var admin = {
+      email: 'widr1225@colorado.edu',
+      id: 'admin',
+      uid: 'admin'
+    };
+    if (process.env.NODE_ENV === 'development') return cb(null, admin);
+
+    //otherwise check the token
     if (!token) return cb(null, false);
     for (var key in users) {
       if (users[key].token === token) return cb(null, users[key]);

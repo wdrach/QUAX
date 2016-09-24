@@ -66,6 +66,10 @@ module.exports = function (app) {
       return get('/api/loggedIn');
     };
 
+    Backend.getTable = function (date) {
+      return get('/api/table/' + date);
+    };
+
     return Backend;
   });
 };
