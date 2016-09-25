@@ -7,6 +7,7 @@
   font-family: 'Lato', sans-serif;
   text-align: center;
   margin: auto;
+  margin-bottom: 30px;
   font-size: 250%;
 }
 
@@ -91,4 +92,30 @@
 }
 
 .modal-action--primary {
+}
+
+/* table */
+table {
+  border-collapse: collapse;
+  margin: auto;
+  font-family: 'Lato', sans-serif;
+}
+
+th {
+  padding: 10px 20px;
+  text-align: center;
+  border-bottom: 2px solid black;
+}
+
+td {
+  padding: 15px 20px;
+  text-align: center;
+}
+
+.row {
+  color: #6699ff;
+}
+
+.row:hover {
+  color: #003399;
 }

@@ -30,6 +30,7 @@
     "aws-sdk": "^2.6.4",
     "body-parser": "^1.15.1",
     "csv": "^1.1.0",
+    "csv-parse": "^1.1.7",
     "dotenv": "^2.0.0",
     "errorhandler": "^1.4.3",
     "express": "^4.14.0",

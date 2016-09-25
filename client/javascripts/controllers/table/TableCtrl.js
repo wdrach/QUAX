@@ -1,10 +1,11 @@
 module.exports = function(app) {
   app.controller('TableCtrl', [
+    '$filter',
     '$scope',
     '$rootScope',
     '$state',
     'Backend',
-    function($scope, $rootScope, $state, Backend) {
+    function($filter, $scope, $rootScope, $state, Backend) {
       if (!$rootScope.loggedIn) {
         console.error("not logged in");
         $state.go('root');
@@ -18,6 +19,9 @@ module.exports = function(app) {
       //now for this last Monday
       //YYYYMMDD for any other date
       $scope.date = 'now';
+
+      //round to N decimal points
+      $scope.accuracy = 3;
 
       var labels = ['Symbol', 'Quality', 'Value', 'Implied Volatility', 'Momentum', 'Current Price'];
 
@@ -33,7 +37,13 @@ module.exports = function(app) {
           for (var key in givenTable) {
             var entry = givenTable[key];
             if (entry.symbol && entry.symbol[0] !== '_') {
-              table.push([entry.symbol, entry.Q, entry.V, entry.IV, entry.M, entry.price]);
+              var sym = entry.symbol
+                , Q = $filter('number')(entry.Q, $scope.accuracy)
+                , V = $filter('number')(entry.V, $scope.accuracy)
+                , IV = $filter('number')(entry.IV, $scope.accuracy)
+                , M = $filter('number')(entry.M, $scope.accuracy)
+                , price = $filter('number')(entry.price, $scope.accuracy);
+              table.push([sym, Q, V, IV, M, price]);
             }
           }
           $scope.displayTable = table;

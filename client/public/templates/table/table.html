@@ -4,7 +4,7 @@
   <tr>
     <th ng-repeat="label in labels" ng-bind="label"></th>
   </tr>
-  <tr ng-repeat="symbol in displayTable">
-    <th ng-repeat="entry in symbol track by $index" ng-bind="entry"></th>
+  <tr class="row" ng-repeat="symbol in displayTable">
+    <td class="cell" ng-repeat="entry in symbol track by $index" ng-bind="entry"></th>
   </tr>
 </table>
