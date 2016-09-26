@@ -42198,7 +42198,7 @@
 /* 16 */
 /***/ function(module, exports) {
 
-	module.exports = "<h1 class=\"logo--center\">QUAX</h1>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in labels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"row\" ng-repeat=\"symbol in displayTable\">\n    <td class=\"cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
+	module.exports = "<h1 class=\"logo--center\">QUAX</h1>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in labels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in topTable\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in labels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in bottomTable\">\n    <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
 
 /***/ },
 /* 17 */
@@ -42411,6 +42411,9 @@
 	      //Ascending/Descending
 	      $scope.ascending = true;
 
+	      //how many values to have in the top/bottom tables
+	      $scope.N = 15;
+
 	      var labels = ['Symbol', 'Quality', 'Value', 'Implied Volatility', 'Momentum', 'Current Price'];
 
 	      var pastLabels = ['Symbol', 'Quality', 'Value', 'Implied Volatility', 'Momentum', 'Current Price', 'Future Price', 'Percent Difference'];
@@ -42443,7 +42446,12 @@
 	          return 0;
 	        });
 
-	        return out;
+	        var newOut = [];
+	        out.forEach(function(elem) {
+	          if (sb === 'symbol' || typeof(elem[sb]) === 'number') newOut.push(elem);
+	        });
+
+	        return newOut;
 	      }
 
 	      function listTable(givenTable) {
@@ -42461,8 +42469,12 @@
 	          //sort by the correct value
 	          var table = sortObject(givenTable);
 
+	          //get top/bottom N
+	          var top = table.splice(0, $scope.N);
+	          var bottom = table.splice(-1*($scope.N), $scope.N);
+
 	          //"crop" numbers to correct accuracy
-	          table.forEach(function(elem, i) {
+	          top.forEach(function(elem, i) {
 	            var sym = elem.symbol
 	              , Q = $filter('number')(elem.Q, $scope.accuracy)
 	              , V = $filter('number')(elem.V, $scope.accuracy)
@@ -42470,11 +42482,23 @@
 	              , M = $filter('number')(elem.M, $scope.accuracy)
 	              , price = $filter('number')(elem.price, $scope.accuracy);
 
-	            table[i] = [sym, Q, V, IV, M, price];
+	            top[i] = [sym, Q, V, IV, M, price];
+	          });
+
+	          bottom.forEach(function(elem, i) {
+	            var sym = elem.symbol
+	              , Q = $filter('number')(elem.Q, $scope.accuracy)
+	              , V = $filter('number')(elem.V, $scope.accuracy)
+	              , IV = $filter('number')(elem.IV, $scope.accuracy)
+	              , M = $filter('number')(elem.M, $scope.accuracy)
+	              , price = $filter('number')(elem.price, $scope.accuracy);
+
+	            bottom[i] = [sym, Q, V, IV, M, price];
 	          });
 
 	          //display
-	          $scope.displayTable = table;
+	          $scope.topTable = top;
+	          $scope.bottomTable = bottom;
 	        }
 	      }
 

@@ -117,10 +117,18 @@ td {
   text-align: center;
 }
 
-.row {
-  color: #6699ff;
+.top_row {
+  color: #00CC66;
 }
 
-.row:hover {
-  color: #003399;
+.top_row:hover {
+  color: #009933;
+}
+
+.bottom_row {
+  color: #FF5050;
+}
+
+.bottom_row:hover {
+  color: #B30000;
 }

@@ -59,7 +59,7 @@ var config = {
 
 module.exports.getTable = (req, res) => {
   //for testing
-  return sendTable([
+  /*return sendTable([
     {
       'P/B:Q': Math.random()*50,
       'Rate of Change: Period=1': Math.random()*50,
@@ -114,7 +114,7 @@ module.exports.getTable = (req, res) => {
       symbol: 'GLAB',
       ticker: 'GLAB US EQUITY'
     }
-  ]);
+  ]);*/
   var date = req.params.date;
 
   //currently only building out "Now" functionality, so date

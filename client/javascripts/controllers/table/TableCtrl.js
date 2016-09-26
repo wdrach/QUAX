@@ -29,6 +29,9 @@ module.exports = function(app) {
       //Ascending/Descending
       $scope.ascending = true;
 
+      //how many values to have in the top/bottom tables
+      $scope.N = 15;
+
       var labels = ['Symbol', 'Quality', 'Value', 'Implied Volatility', 'Momentum', 'Current Price'];
 
       var pastLabels = ['Symbol', 'Quality', 'Value', 'Implied Volatility', 'Momentum', 'Current Price', 'Future Price', 'Percent Difference'];
@@ -61,7 +64,12 @@ module.exports = function(app) {
           return 0;
         });
 
-        return out;
+        var newOut = [];
+        out.forEach(function(elem) {
+          if (sb === 'symbol' || typeof(elem[sb]) === 'number') newOut.push(elem);
+        });
+
+        return newOut;
       }
 
       function listTable(givenTable) {
@@ -79,8 +87,12 @@ module.exports = function(app) {
           //sort by the correct value
           var table = sortObject(givenTable);
 
+          //get top/bottom N
+          var top = table.splice(0, $scope.N);
+          var bottom = table.splice(-1*($scope.N), $scope.N);
+
           //"crop" numbers to correct accuracy
-          table.forEach(function(elem, i) {
+          top.forEach(function(elem, i) {
             var sym = elem.symbol
               , Q = $filter('number')(elem.Q, $scope.accuracy)
               , V = $filter('number')(elem.V, $scope.accuracy)
@@ -88,11 +100,23 @@ module.exports = function(app) {
               , M = $filter('number')(elem.M, $scope.accuracy)
               , price = $filter('number')(elem.price, $scope.accuracy);
 
-            table[i] = [sym, Q, V, IV, M, price];
+            top[i] = [sym, Q, V, IV, M, price];
+          });
+
+          bottom.forEach(function(elem, i) {
+            var sym = elem.symbol
+              , Q = $filter('number')(elem.Q, $scope.accuracy)
+              , V = $filter('number')(elem.V, $scope.accuracy)
+              , IV = $filter('number')(elem.IV, $scope.accuracy)
+              , M = $filter('number')(elem.M, $scope.accuracy)
+              , price = $filter('number')(elem.price, $scope.accuracy);
+
+            bottom[i] = [sym, Q, V, IV, M, price];
           });
 
           //display
-          $scope.displayTable = table;
+          $scope.topTable = top;
+          $scope.bottomTable = bottom;
         }
       }
 
