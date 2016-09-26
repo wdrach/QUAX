@@ -76,13 +76,18 @@ module.exports = function(app) {
         if ($scope.date === 'now') {
 
           //set the labels with the little arrow!
-          var newLabels = [];
+          var topLabels = [];
+          var botLabels = [];
           labels.forEach(function(elem) {
-            newLabels.push(elem);
+            topLabels.push(elem);
+            botLabels.push(elem);
           });
           var unicode = $scope.ascending ? ' \u25B2' : ' \u25BC';
-          newLabels[labels.indexOf($scope.sortBy)] = $sce.trustAsHtml(labels[labels.indexOf($scope.sortBy)] + unicode);
-          $scope.labels = newLabels;
+          var bottom_unicode = $scope.ascending ? ' \u25BC' : ' \u25B2';
+          topLabels[labels.indexOf($scope.sortBy)] = $sce.trustAsHtml(labels[labels.indexOf($scope.sortBy)] + unicode);
+          botLabels[labels.indexOf($scope.sortBy)] = $sce.trustAsHtml(labels[labels.indexOf($scope.sortBy)] + bottom_unicode);
+          $scope.topLabels = topLabels;
+          $scope.botLabels = botLabels;
 
           //sort by the correct value
           var table = sortObject(givenTable);
@@ -126,7 +131,10 @@ module.exports = function(app) {
       });
 
       $scope.changeSort = function(label) {
-        label = labels[$scope.labels.indexOf(label)];
+        var index = $scope.topLabels.indexOf(label) !== -1 ?
+                    $scope.topLabels.indexOf(label) :
+                    $scope.botLabels.indexOf(label);
+        label = labels[index];
         if (label === $scope.sortBy) $scope.ascending = !$scope.ascending;
         else {
           $scope.sortBy = label;

@@ -2,7 +2,7 @@
 
 <table>
   <tr>
-    <th ng-repeat="label in labels"> <a href="#" ng-click="changeSort(label)" ng-bind="label"></a></th>
+    <th ng-repeat="label in topLabels"> <a href="#" ng-click="changeSort(label)" ng-bind="label"></a></th>
   </tr>
   <tr class="top_row" ng-repeat="symbol in topTable">
     <td class="top_cell" ng-repeat="entry in symbol track by $index" ng-bind="entry"></th>
@@ -11,7 +11,7 @@
 
 <table>
   <tr>
-    <th ng-repeat="label in labels"> <a href="#" ng-click="changeSort(label)" ng-bind="label"></a></th>
+    <th ng-repeat="label in botLabels"> <a href="#" ng-click="changeSort(label)" ng-bind="label"></a></th>
   </tr>
   <tr class="bottom_row" ng-repeat="symbol in bottomTable">
     <td class="bottom_cell" ng-repeat="entry in symbol track by $index" ng-bind="entry"></th>

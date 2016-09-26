@@ -42198,7 +42198,7 @@
 /* 16 */
 /***/ function(module, exports) {
 
-	module.exports = "<h1 class=\"logo--center\">QUAX</h1>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in labels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in topTable\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in labels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in bottomTable\">\n    <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
+	module.exports = "<h1 class=\"logo--center\">QUAX</h1>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in topLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in topTable\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in botLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in bottomTable\">\n    <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
 
 /***/ },
 /* 17 */
@@ -42458,13 +42458,18 @@
 	        if ($scope.date === 'now') {
 
 	          //set the labels with the little arrow!
-	          var newLabels = [];
+	          var topLabels = [];
+	          var botLabels = [];
 	          labels.forEach(function(elem) {
-	            newLabels.push(elem);
+	            topLabels.push(elem);
+	            botLabels.push(elem);
 	          });
 	          var unicode = $scope.ascending ? ' \u25B2' : ' \u25BC';
-	          newLabels[labels.indexOf($scope.sortBy)] = $sce.trustAsHtml(labels[labels.indexOf($scope.sortBy)] + unicode);
-	          $scope.labels = newLabels;
+	          var bottom_unicode = $scope.ascending ? ' \u25BC' : ' \u25B2';
+	          topLabels[labels.indexOf($scope.sortBy)] = $sce.trustAsHtml(labels[labels.indexOf($scope.sortBy)] + unicode);
+	          botLabels[labels.indexOf($scope.sortBy)] = $sce.trustAsHtml(labels[labels.indexOf($scope.sortBy)] + bottom_unicode);
+	          $scope.topLabels = topLabels;
+	          $scope.botLabels = botLabels;
 
 	          //sort by the correct value
 	          var table = sortObject(givenTable);
@@ -42498,7 +42503,7 @@
 
 	          //display
 	          $scope.topTable = top;
-	          $scope.bottomTable = bottom;
+	          $scope.bottomTable = bottom.reverse();
 	        }
 	      }
 
@@ -42508,7 +42513,10 @@
 	      });
 
 	      $scope.changeSort = function(label) {
-	        label = labels[$scope.labels.indexOf(label)];
+	        var index = $scope.topLabels.indexOf(label) !== -1 ?
+	                    $scope.topLabels.indexOf(label) :
+	                    $scope.botLabels.indexOf(label);
+	        label = labels[index];
 	        if (label === $scope.sortBy) $scope.ascending = !$scope.ascending;
 	        else {
 	          $scope.sortBy = label;
