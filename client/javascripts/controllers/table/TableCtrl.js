@@ -116,7 +116,7 @@ module.exports = function(app) {
 
           //display
           $scope.topTable = top;
-          $scope.bottomTable = bottom;
+          $scope.bottomTable = bottom.reverse();
         }
       }
 
