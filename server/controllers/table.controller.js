@@ -24,6 +24,7 @@ var s3 = new AWS.S3()
  *     future_price: <future price>,
  *     sharpe: <1mo sharpe>,
  *     symbol: <symbol 1>,
+ *     name: <full company name>,
  *     ticker: <bloomberg symbol, e.g. AAPL US EQUITY>
  *   },
  *   <symbol 2>: ...
@@ -57,6 +58,63 @@ var config = {
 };
 
 module.exports.getTable = (req, res) => {
+  //for testing
+  /*return sendTable([
+    {
+      'P/B:Q': Math.random()*50,
+      'Rate of Change: Period=1': Math.random()*50,
+      '3M IVOL 100% Mny': Math.random()*50,
+      'P/E:Q': Math.random()*50,
+      price: Math.random()*100,
+      symbol: 'BLAB',
+      ticker: 'BLAB US EQUITY'
+    },
+    {
+      'P/B:Q': Math.random()*50,
+      'Rate of Change: Period=1': Math.random()*50,
+      '3M IVOL 100% Mny': Math.random()*50,
+      'P/E:Q': Math.random()*50,
+      price: Math.random()*100,
+      symbol: 'CLAB',
+      ticker: 'CLAB US EQUITY'
+    },
+    {
+      'P/B:Q': Math.random()*50,
+      'Rate of Change: Period=1': Math.random()*50,
+      '3M IVOL 100% Mny': Math.random()*50,
+      'P/E:Q': Math.random()*50,
+      price: Math.random()*100,
+      symbol: 'DLAB',
+      ticker: 'DLAB US EQUITY'
+    },
+    {
+      'P/B:Q': Math.random()*50,
+      'Rate of Change: Period=1': Math.random()*50,
+      '3M IVOL 100% Mny': Math.random()*50,
+      'P/E:Q': Math.random()*50,
+      price: Math.random()*100,
+      symbol: 'ELAB',
+      ticker: 'ELAB US EQUITY'
+    },
+    {
+      'P/B:Q': Math.random()*50,
+      'Rate of Change: Period=1': Math.random()*50,
+      '3M IVOL 100% Mny': Math.random()*50,
+      'P/E:Q': Math.random()*50,
+      price: Math.random()*100,
+      symbol: 'FLAB',
+      ticker: 'FLAB US EQUITY'
+    },
+    {
+      'P/B:Q': Math.random()*50,
+      'Rate of Change: Period=1': Math.random()*50,
+      '3M IVOL 100% Mny': Math.random()*50,
+      'P/E:Q': Math.random()*50,
+      price: Math.random()*100,
+      symbol: 'GLAB',
+      ticker: 'GLAB US EQUITY'
+    }
+  ]);*/
   var date = req.params.date;
 
   //currently only building out "Now" functionality, so date

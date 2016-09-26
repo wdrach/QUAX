@@ -7,6 +7,7 @@
   font-family: 'Lato', sans-serif;
   text-align: center;
   margin: auto;
+  margin-bottom: 30px;
   font-size: 250%;
 }
 
@@ -91,4 +92,43 @@
 }
 
 .modal-action--primary {
+}
+
+/* table */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+table {
+  border-collapse: collapse;
+  margin: auto;
+  font-family: 'Lato', sans-serif;
+}
+
+th {
+  padding: 10px 20px;
+  text-align: center;
+  border-bottom: 2px solid black;
+}
+
+td {
+  padding: 15px 20px;
+  text-align: center;
+}
+
+.top_row {
+  color: #00CC66;
+}
+
+.top_row:hover {
+  color: #009933;
+}
+
+.bottom_row {
+  color: #FF5050;
+}
+
+.bottom_row:hover {
+  color: #B30000;
 }
