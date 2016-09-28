@@ -4,8 +4,11 @@ var passport = require('passport')
   , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
   , TokenStrategy = require('passport-http-bearer').Strategy;
 
-var accepted_users = {"widr1225@colorado.edu": true,
-                      "will.drach@gmail.com": true};
+var accepted_users = {
+  "widr1225@colorado.edu": true,
+  "will.drach@gmail.com": true,
+  "jome7940@colorado.edu": true
+};
 
 var users = {};
 
