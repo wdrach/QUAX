@@ -9,7 +9,8 @@ var accepted_users = {
   "will.drach@gmail.com": true,
   "jome7940@colorado.edu": true,
   "joba8951@colorado.edu": true,
-  "auye8443@colorado.edu": true
+  "auye8443@colorado.edu": true,
+  "bellegar@colorado.edu": true
 };
 
 var users = {};

@@ -103,7 +103,7 @@ module.exports = function(app) {
               , V = $filter('number')(elem.V, $scope.accuracy)
               , IV = $filter('number')(elem.IV, $scope.accuracy)
               , M = $filter('number')(elem.M, $scope.accuracy)
-              , price = $filter('number')(elem.price, $scope.accuracy);
+              , price = '$ ' + $filter('number')(elem.price, 2);
 
             top[i] = [sym, Q, V, IV, M, price];
           });
@@ -114,7 +114,7 @@ module.exports = function(app) {
               , V = $filter('number')(elem.V, $scope.accuracy)
               , IV = $filter('number')(elem.IV, $scope.accuracy)
               , M = $filter('number')(elem.M, $scope.accuracy)
-              , price = $filter('number')(elem.price, $scope.accuracy);
+              , price = '$ ' + $filter('number')(elem.price, 2);
 
             bottom[i] = [sym, Q, V, IV, M, price];
           });
