@@ -7,7 +7,8 @@ var passport = require('passport')
 var accepted_users = {
   "widr1225@colorado.edu": true,
   "will.drach@gmail.com": true,
-  "jome7940@colorado.edu": true
+  "jome7940@colorado.edu": true,
+  "joba8951@colorado.edu": true
 };
 
 var users = {};
