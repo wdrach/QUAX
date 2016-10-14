@@ -12,6 +12,10 @@ module.exports = function(app) {
         $state.go('root');
       }
 
+      Backend.getValidDates().then(function(data) {
+        $scope.dates = data.data.dates;
+      });
+
       //base for no weights
       //test (only for date !== now) for equal equity in each metric
       //weight for weighing metrics

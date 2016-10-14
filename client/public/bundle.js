@@ -42394,6 +42394,10 @@
 	        $state.go('root');
 	      }
 
+	      Backend.getValidDates().then(function(data) {
+	        $scope.dates = data.data.dates;
+	      });
+
 	      //base for no weights
 	      //test (only for date !== now) for equal equity in each metric
 	      //weight for weighing metrics
@@ -42668,7 +42672,11 @@
 	    };
 
 	    Backend.getTable = function (date) {
-	      return get('/api/table/' + date);
+	      return get('/api/table/date/' + date);
+	    };
+
+	    Backend.getValidDates = function () {
+	      return get('/api/table/getValidDates');
 	    };
 
 	    return Backend;

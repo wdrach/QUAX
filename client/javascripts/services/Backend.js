@@ -67,7 +67,11 @@ module.exports = function (app) {
     };
 
     Backend.getTable = function (date) {
-      return get('/api/table/' + date);
+      return get('/api/table/date/' + date);
+    };
+
+    Backend.getValidDates = function () {
+      return get('/api/table/getValidDates');
     };
 
     return Backend;

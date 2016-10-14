@@ -241,3 +241,22 @@ module.exports.getTable = (req, res) => {
     return res.json(out);
   }
 };
+
+module.exports.getValidDates = function(req, res) {
+  var bucketParams = {
+    Bucket: 'quax',
+    Prefix: 'dirty'
+  };
+
+  s3.listObjects(bucketParams, function(err, data) {
+    if (err) return res.sendStatus(500);
+    var ret = {
+      dates: data.Contents.map(function(obj) {
+        return obj.Key.replace('dirty/', '').substring(0, 8);
+      })
+    };
+
+    ret.dates.shift();
+    res.json(ret);
+  });
+};
