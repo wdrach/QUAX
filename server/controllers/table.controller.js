@@ -117,10 +117,6 @@ module.exports.getTable = (req, res) => {
   ]);*/
   var date = req.params.date;
 
-  //currently only building out "Now" functionality, so date
-  //is locked at 2016 09 19
-  date = '20160919';
-
   var bucketParams = {
     Bucket: 'quax',
     Key: 'clean/' + date + '_Clean.json'
@@ -190,9 +186,7 @@ module.exports.getTable = (req, res) => {
           }
         });
 
-        console.log(JSON.stringify(clean, null, 2));
-
-        var buf = Buffer.from(JSON.stringify(clean));
+        var buf = new Buffer(JSON.stringify(clean), 'utf-8');
         var putParams = {
           Bucket: 'quax',
           Key: 'clean/' + date + '_Clean.json',
@@ -240,4 +234,23 @@ module.exports.getTable = (req, res) => {
     //:shipit:
     return res.json(out);
   }
+};
+
+module.exports.getValidDates = function(req, res) {
+  var bucketParams = {
+    Bucket: 'quax',
+    Prefix: 'dirty'
+  };
+
+  s3.listObjects(bucketParams, function(err, data) {
+    if (err) return res.sendStatus(500);
+    var ret = {
+      dates: data.Contents.map(function(obj) {
+        return obj.Key.replace('dirty/', '').substring(0, 8);
+      })
+    };
+
+    ret.dates.shift();
+    res.json(ret);
+  });
 };

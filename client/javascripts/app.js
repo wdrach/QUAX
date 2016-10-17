@@ -65,6 +65,26 @@ app.config(function($urlRouterProvider, $stateProvider, $httpProvider, $anchorSc
           }]
         }
       });
+    $stateProvider
+      .state('table-date', {
+        url: '/table/:date',
+        template: require('../public/templates/table/table.html'),
+        controller: 'TableCtrl',
+        resolve: {
+          'currentAuth': ['$q', '$rootScope', 'Backend', function($q, $rootScope, Backend) {
+            var def = $q.defer();
+            Backend.loggedIn().then(function() {
+              $rootScope.loggedIn = true;
+              def.resolve();
+            }, function() {
+              $rootScope.loggedIn = false;
+              def.reject();
+            });
+
+            return def.promise;
+          }]
+        }
+      });
 });
 
 app.run(['$rootScope', '$state', function($rootScope, $state) {
