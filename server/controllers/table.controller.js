@@ -117,10 +117,6 @@ module.exports.getTable = (req, res) => {
   ]);*/
   var date = req.params.date;
 
-  //currently only building out "Now" functionality, so date
-  //is locked at 2016 09 19
-  date = '20160919';
-
   var bucketParams = {
     Bucket: 'quax',
     Key: 'clean/' + date + '_Clean.json'
@@ -190,9 +186,7 @@ module.exports.getTable = (req, res) => {
           }
         });
 
-        console.log(JSON.stringify(clean, null, 2));
-
-        var buf = Buffer.from(JSON.stringify(clean));
+        var buf = new Buffer(JSON.stringify(clean), 'utf-8');
         var putParams = {
           Bucket: 'quax',
           Key: 'clean/' + date + '_Clean.json',
