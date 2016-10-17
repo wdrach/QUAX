@@ -111,6 +111,26 @@
 	          }]
 	        }
 	      });
+	    $stateProvider
+	      .state('table-date', {
+	        url: '/table/:date',
+	        template: __webpack_require__(16),
+	        controller: 'TableCtrl',
+	        resolve: {
+	          'currentAuth': ['$q', '$rootScope', 'Backend', function($q, $rootScope, Backend) {
+	            var def = $q.defer();
+	            Backend.loggedIn().then(function() {
+	              $rootScope.loggedIn = true;
+	              def.resolve();
+	            }, function() {
+	              $rootScope.loggedIn = false;
+	              def.reject();
+	            });
+
+	            return def.promise;
+	          }]
+	        }
+	      });
 	});
 
 	app.run(['$rootScope', '$state', function($rootScope, $state) {
@@ -42198,7 +42218,7 @@
 /* 16 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in topLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in topTable\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in botLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in bottomTable\">\n    <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
+	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in topLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in topTable\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in botLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in bottomTable\">\n    <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
 
 /***/ },
 /* 17 */
@@ -42383,25 +42403,41 @@
 	module.exports = function(app) {
 	  app.controller('TableCtrl', [
 	    '$filter',
-	    '$scope',
 	    '$rootScope',
 	    '$sce',
+	    '$scope',
 	    '$state',
+	    '$stateParams',
+	    '$timeout',
 	    'Backend',
-	    function($filter, $scope, $rootScope, $sce, $state, Backend) {
+	    function($filter, $rootScope, $sce, $scope, $state, $stateParams, $timeout, Backend) {
 	      if (!$rootScope.loggedIn) {
 	        console.error("not logged in");
 	        $state.go('root');
 	      }
+
+	      Backend.getValidDates().then(function(data) {
+	        $scope.dates = data.data.dates.sort();
+
+	        //now for this last Monday
+	        //YYYYMMDD for any other date
+	        $scope.date = $scope.dates[0];
+	        if ($stateParams.date) {
+	          $scope.date = $stateParams.date;
+	        }
+	        $scope.selectDate = $scope.date;
+
+	        Backend.getTable($scope.date).then(function(data) {
+	          $scope.table = data.data;
+	          listTable(data.data);
+	        });
+	      });
 
 	      //base for no weights
 	      //test (only for date !== now) for equal equity in each metric
 	      //weight for weighing metrics
 	      $scope.mode = 'base';
 
-	      //now for this last Monday
-	      //YYYYMMDD for any other date
-	      $scope.date = 'now';
 
 	      //round to N decimal points
 	      $scope.accuracy = 3;
@@ -42455,62 +42491,57 @@
 	      }
 
 	      function listTable(givenTable) {
-	        if ($scope.date === 'now') {
+	        //set the labels with the little arrow!
+	        var topLabels = [];
+	        var botLabels = [];
+	        labels.forEach(function(elem) {
+	          topLabels.push(elem);
+	          botLabels.push(elem);
+	        });
+	        var unicode = $scope.ascending ? ' \u25B2' : ' \u25BC';
+	        var bottom_unicode = $scope.ascending ? ' \u25BC' : ' \u25B2';
+	        topLabels[labels.indexOf($scope.sortBy)] = $sce.trustAsHtml(labels[labels.indexOf($scope.sortBy)] + unicode);
+	        botLabels[labels.indexOf($scope.sortBy)] = $sce.trustAsHtml(labels[labels.indexOf($scope.sortBy)] + bottom_unicode);
+	        $scope.topLabels = topLabels;
+	        $scope.botLabels = botLabels;
 
-	          //set the labels with the little arrow!
-	          var topLabels = [];
-	          var botLabels = [];
-	          labels.forEach(function(elem) {
-	            topLabels.push(elem);
-	            botLabels.push(elem);
-	          });
-	          var unicode = $scope.ascending ? ' \u25B2' : ' \u25BC';
-	          var bottom_unicode = $scope.ascending ? ' \u25BC' : ' \u25B2';
-	          topLabels[labels.indexOf($scope.sortBy)] = $sce.trustAsHtml(labels[labels.indexOf($scope.sortBy)] + unicode);
-	          botLabels[labels.indexOf($scope.sortBy)] = $sce.trustAsHtml(labels[labels.indexOf($scope.sortBy)] + bottom_unicode);
-	          $scope.topLabels = topLabels;
-	          $scope.botLabels = botLabels;
+	        //sort by the correct value
+	        var table = sortObject(givenTable);
 
-	          //sort by the correct value
-	          var table = sortObject(givenTable);
+	        //get top/bottom N
+	        var top = table.splice(0, $scope.N);
+	        var bottom = table.splice(-1*($scope.N), $scope.N);
 
-	          //get top/bottom N
-	          var top = table.splice(0, $scope.N);
-	          var bottom = table.splice(-1*($scope.N), $scope.N);
+	        //"crop" numbers to correct accuracy
+	        top.forEach(function(elem, i) {
+	          var sym = elem.symbol
+	            , Q = $filter('number')(elem.Q, $scope.accuracy)
+	            , V = $filter('number')(elem.V, $scope.accuracy)
+	            , IV = $filter('number')(elem.IV, $scope.accuracy)
+	            , M = $filter('number')(elem.M, $scope.accuracy)
+	            , price = '$' + $filter('number')(elem.price, 2);
 
-	          //"crop" numbers to correct accuracy
-	          top.forEach(function(elem, i) {
-	            var sym = elem.symbol
-	              , Q = $filter('number')(elem.Q, $scope.accuracy)
-	              , V = $filter('number')(elem.V, $scope.accuracy)
-	              , IV = $filter('number')(elem.IV, $scope.accuracy)
-	              , M = $filter('number')(elem.M, $scope.accuracy)
-	              , price = '$' + $filter('number')(elem.price, 2);
+	          top[i] = [sym, Q, V, IV, M, price];
+	        });
 
-	            top[i] = [sym, Q, V, IV, M, price];
-	          });
+	        bottom.forEach(function(elem, i) {
+	          var sym = elem.symbol
+	            , Q = $filter('number')(elem.Q, $scope.accuracy)
+	            , V = $filter('number')(elem.V, $scope.accuracy)
+	            , IV = $filter('number')(elem.IV, $scope.accuracy)
+	            , M = $filter('number')(elem.M, $scope.accuracy)
+	            , price = '$' + $filter('number')(elem.price, 2);
 
-	          bottom.forEach(function(elem, i) {
-	            var sym = elem.symbol
-	              , Q = $filter('number')(elem.Q, $scope.accuracy)
-	              , V = $filter('number')(elem.V, $scope.accuracy)
-	              , IV = $filter('number')(elem.IV, $scope.accuracy)
-	              , M = $filter('number')(elem.M, $scope.accuracy)
-	              , price = '$' + $filter('number')(elem.price, 2);
+	          bottom[i] = [sym, Q, V, IV, M, price];
+	        });
 
-	            bottom[i] = [sym, Q, V, IV, M, price];
-	          });
-
-	          //display
+	        //display
+	        $timeout(function() {
 	          $scope.topTable = top;
 	          $scope.bottomTable = bottom.reverse();
-	        }
+	        });
 	      }
 
-	      Backend.getTable($scope.date).then(function(data) {
-	        $scope.table = data.data;
-	        listTable(data.data);
-	      });
 
 	      $scope.changeSort = function(label) {
 	        var index = $scope.topLabels.indexOf(label) !== -1 ?
@@ -42524,6 +42555,14 @@
 	        }
 
 	        listTable($scope.table);
+	      }
+	      $scope.updateDate = function(date) {
+	        $scope.date = date;
+
+	        Backend.getTable($scope.date).then(function(data) {
+	          $scope.table = data.data;
+	          listTable(data.data);
+	        });
 	      }
 	    }
 	  ]);
@@ -42668,7 +42707,11 @@
 	    };
 
 	    Backend.getTable = function (date) {
-	      return get('/api/table/' + date);
+	      return get('/api/table/date/' + date);
+	    };
+
+	    Backend.getValidDates = function () {
+	      return get('/api/table/getValidDates');
 	    };
 
 	    return Backend;
