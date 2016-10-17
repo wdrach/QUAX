@@ -14,7 +14,19 @@ module.exports = function(app) {
       }
 
       Backend.getValidDates().then(function(data) {
-        $scope.dates = data.data.dates;
+        $scope.dates = data.data.dates.sort();
+
+        //now for this last Monday
+        //YYYYMMDD for any other date
+        $scope.date = $scope.dates[0];
+        if ($stateParams.date) {
+          $scope.date = $stateParams.date;
+        }
+
+        Backend.getTable($scope.date).then(function(data) {
+          $scope.table = data.data;
+          listTable(data.data);
+        });
       });
 
       //base for no weights
@@ -22,13 +34,6 @@ module.exports = function(app) {
       //weight for weighing metrics
       $scope.mode = 'base';
 
-      //now for this last Monday
-      //YYYYMMDD for any other date
-      $scope.date = 'now';
-      if ($stateParams.date) {
-        $scope.date = $stateParams.date;
-        console.log("Date set to " + $scope.date);
-      }
 
       //round to N decimal points
       $scope.accuracy = 3;
@@ -131,10 +136,6 @@ module.exports = function(app) {
         $scope.bottomTable = bottom.reverse();
       }
 
-      Backend.getTable($scope.date).then(function(data) {
-        $scope.table = data.data;
-        listTable(data.data);
-      });
 
       $scope.changeSort = function(label) {
         var index = $scope.topLabels.indexOf(label) !== -1 ?
