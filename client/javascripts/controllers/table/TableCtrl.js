@@ -6,8 +6,9 @@ module.exports = function(app) {
     '$scope',
     '$state',
     '$stateParams',
+    '$timeout',
     'Backend',
-    function($filter, $rootScope, $sce, $scope, $state, $stateParams, Backend) {
+    function($filter, $rootScope, $sce, $scope, $state, $stateParams, $timeout, Backend) {
       if (!$rootScope.loggedIn) {
         console.error("not logged in");
         $state.go('root');
@@ -22,6 +23,7 @@ module.exports = function(app) {
         if ($stateParams.date) {
           $scope.date = $stateParams.date;
         }
+        $scope.selectDate = $scope.date;
 
         Backend.getTable($scope.date).then(function(data) {
           $scope.table = data.data;
@@ -132,8 +134,10 @@ module.exports = function(app) {
         });
 
         //display
-        $scope.topTable = top;
-        $scope.bottomTable = bottom.reverse();
+        $timeout(function() {
+          $scope.topTable = top;
+          $scope.bottomTable = bottom.reverse();
+        });
       }
 
 
@@ -149,6 +153,14 @@ module.exports = function(app) {
         }
 
         listTable($scope.table);
+      }
+      $scope.updateDate = function(date) {
+        $scope.date = date;
+
+        Backend.getTable($scope.date).then(function(data) {
+          $scope.table = data.data;
+          listTable(data.data);
+        });
       }
     }
   ]);

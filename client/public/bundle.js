@@ -42218,7 +42218,7 @@
 /* 16 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in topLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in topTable\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in botLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in bottomTable\">\n    <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
+	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in topLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in topTable\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in botLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in bottomTable\">\n    <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
 
 /***/ },
 /* 17 */
@@ -42408,8 +42408,9 @@
 	    '$scope',
 	    '$state',
 	    '$stateParams',
+	    '$timeout',
 	    'Backend',
-	    function($filter, $rootScope, $sce, $scope, $state, $stateParams, Backend) {
+	    function($filter, $rootScope, $sce, $scope, $state, $stateParams, $timeout, Backend) {
 	      if (!$rootScope.loggedIn) {
 	        console.error("not logged in");
 	        $state.go('root');
@@ -42424,6 +42425,7 @@
 	        if ($stateParams.date) {
 	          $scope.date = $stateParams.date;
 	        }
+	        $scope.selectDate = $scope.date;
 
 	        Backend.getTable($scope.date).then(function(data) {
 	          $scope.table = data.data;
@@ -42534,8 +42536,10 @@
 	        });
 
 	        //display
-	        $scope.topTable = top;
-	        $scope.bottomTable = bottom.reverse();
+	        $timeout(function() {
+	          $scope.topTable = top;
+	          $scope.bottomTable = bottom.reverse();
+	        });
 	      }
 
 
@@ -42551,6 +42555,14 @@
 	        }
 
 	        listTable($scope.table);
+	      }
+	      $scope.updateDate = function(date) {
+	        $scope.date = date;
+
+	        Backend.getTable($scope.date).then(function(data) {
+	          $scope.table = data.data;
+	          listTable(data.data);
+	        });
 	      }
 	    }
 	  ]);
