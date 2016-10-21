@@ -42218,7 +42218,7 @@
 /* 16 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in topLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in topTable\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in botLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in bottomTable\">\n    <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
+	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<!--<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>-->\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in topLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in topTable\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in botLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in bottomTable\">\n    <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
 
 /***/ },
 /* 17 */
@@ -42450,9 +42450,7 @@
 	      //how many values to have in the top/bottom tables
 	      $scope.N = 15;
 
-	      var labels = ['Symbol', 'Quality', 'Value', 'Implied Volatility', 'Momentum', 'Current Price'];
-
-	      var pastLabels = ['Symbol', 'Quality', 'Value', 'Implied Volatility', 'Momentum', 'Current Price', 'Future Price', 'Percent Difference'];
+	      var labels = ['Symbol', 'Money Flow Short', 'CDS Spread', 'Implied Volatility', 'Current Price'];
 
 	      $scope.displayTable = [];
 	      $scope.labels = labels;
@@ -42460,8 +42458,8 @@
 	      function sortObject(obj) {
 	        var lookup = {
 	          Symbol: 'symbol',
-	          Quality: 'Q',
-	          Value: 'V',
+	          'Money Flow Short': 'MFS',
+	          'CDS Spread': 'CDS',
 	          'Implied Volatility': 'IV',
 	          Momentum: 'M',
 	          'Current Price': 'price'
@@ -42515,24 +42513,22 @@
 	        //"crop" numbers to correct accuracy
 	        top.forEach(function(elem, i) {
 	          var sym = elem.symbol
-	            , Q = $filter('number')(elem.Q, $scope.accuracy)
-	            , V = $filter('number')(elem.V, $scope.accuracy)
+	            , MFS = $filter('number')(elem.MFS, $scope.accuracy)
+	            , CDS = $filter('number')(elem.CDS, $scope.accuracy)
 	            , IV = $filter('number')(elem.IV, $scope.accuracy)
-	            , M = $filter('number')(elem.M, $scope.accuracy)
 	            , price = '$' + $filter('number')(elem.price, 2);
 
-	          top[i] = [sym, Q, V, IV, M, price];
+	          top[i] = [sym, MFS, CDS, IV, price];
 	        });
 
 	        bottom.forEach(function(elem, i) {
 	          var sym = elem.symbol
-	            , Q = $filter('number')(elem.Q, $scope.accuracy)
-	            , V = $filter('number')(elem.V, $scope.accuracy)
+	            , MFS = $filter('number')(elem.MFS, $scope.accuracy)
+	            , CDS = $filter('number')(elem.CDS, $scope.accuracy)
 	            , IV = $filter('number')(elem.IV, $scope.accuracy)
-	            , M = $filter('number')(elem.M, $scope.accuracy)
 	            , price = '$' + $filter('number')(elem.price, 2);
 
-	          bottom[i] = [sym, Q, V, IV, M, price];
+	          bottom[i] = [sym, MFS, CDS, IV, price];
 	        });
 
 	        //display

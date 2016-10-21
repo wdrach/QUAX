@@ -58,63 +58,6 @@ var config = {
 };
 
 module.exports.getTable = (req, res) => {
-  //for testing
-  /*return sendTable([
-    {
-      'P/B:Q': Math.random()*50,
-      'Rate of Change: Period=1': Math.random()*50,
-      '3M IVOL 100% Mny': Math.random()*50,
-      'P/E:Q': Math.random()*50,
-      price: Math.random()*100,
-      symbol: 'BLAB',
-      ticker: 'BLAB US EQUITY'
-    },
-    {
-      'P/B:Q': Math.random()*50,
-      'Rate of Change: Period=1': Math.random()*50,
-      '3M IVOL 100% Mny': Math.random()*50,
-      'P/E:Q': Math.random()*50,
-      price: Math.random()*100,
-      symbol: 'CLAB',
-      ticker: 'CLAB US EQUITY'
-    },
-    {
-      'P/B:Q': Math.random()*50,
-      'Rate of Change: Period=1': Math.random()*50,
-      '3M IVOL 100% Mny': Math.random()*50,
-      'P/E:Q': Math.random()*50,
-      price: Math.random()*100,
-      symbol: 'DLAB',
-      ticker: 'DLAB US EQUITY'
-    },
-    {
-      'P/B:Q': Math.random()*50,
-      'Rate of Change: Period=1': Math.random()*50,
-      '3M IVOL 100% Mny': Math.random()*50,
-      'P/E:Q': Math.random()*50,
-      price: Math.random()*100,
-      symbol: 'ELAB',
-      ticker: 'ELAB US EQUITY'
-    },
-    {
-      'P/B:Q': Math.random()*50,
-      'Rate of Change: Period=1': Math.random()*50,
-      '3M IVOL 100% Mny': Math.random()*50,
-      'P/E:Q': Math.random()*50,
-      price: Math.random()*100,
-      symbol: 'FLAB',
-      ticker: 'FLAB US EQUITY'
-    },
-    {
-      'P/B:Q': Math.random()*50,
-      'Rate of Change: Period=1': Math.random()*50,
-      '3M IVOL 100% Mny': Math.random()*50,
-      'P/E:Q': Math.random()*50,
-      price: Math.random()*100,
-      symbol: 'GLAB',
-      ticker: 'GLAB US EQUITY'
-    }
-  ]);*/
   var date = req.params.date;
 
   var bucketParams = {
@@ -144,13 +87,13 @@ module.exports.getTable = (req, res) => {
       parse(str, {rowDelimiter: '\r\n'}, function(err, output) {
         if (err) return res.sendStatus(500);
 
-        var labels = output[0];
+        var labels = output[2];
         var clean = [];
         var symbols = [];
 
         output.forEach(function(elem, i) {
           //ignore the labels
-          if (i === 0) return;
+          if (i <= 3) return;
 
           var entry = {};
 
@@ -160,7 +103,7 @@ module.exports.getTable = (req, res) => {
             //don't care about these
             if (label === 'Weight' || label === 'Shares') return;
             //clean up a few values
-            if (label === 'Price') {
+            if (label === 'Price' || label === 'Price:D-1') {
               entry.price = parseFloat(elem[j]);
               return;
             }
@@ -205,24 +148,15 @@ module.exports.getTable = (req, res) => {
   function sendTable(table) {
     //set metadata
     var out = {
-      _date: date,
-      _q_metric_str: config.q_str,
-      _q_metric_id: config.q_id,
-      _v_metric_str: config.v_str,
-      _v_metric_id: config.v_id,
-      _iv_metric_str: config.iv_str,
-      _iv_metric_id: config.iv_id,
-      _m_metric_str: config.m_str,
-      _m_metric_id: config.m_id
+      _date: date
     };
 
     table.forEach(function(entry) {
       //build entry, pretty straightforward
       var newEntry = {
-        Q: entry[config.q_id],
-        V: entry[config.v_id],
-        IV: entry[config.iv_id],
-        M: entry[config.m_id],
+        IV: entry['2nd PUT IVOL 25 Delta']/entry['2nd PUT IVOL 50 Delta'],
+        CDS: entry['Bloomberg Issuer Default Risk Implied CDS Spread (Adjusted)'],
+        MFS: entry['Money Flow Non Block Weekly']/(entry['Money Flow Block Monthly'] - entry['Money Flow Non Block Weekly']),
         price: entry.price,
         sharpe: entry['Sharpe:M-1'],
         symbol: entry.symbol,

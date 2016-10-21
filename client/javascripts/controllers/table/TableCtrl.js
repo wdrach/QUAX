@@ -48,9 +48,7 @@ module.exports = function(app) {
       //how many values to have in the top/bottom tables
       $scope.N = 15;
 
-      var labels = ['Symbol', 'Quality', 'Value', 'Implied Volatility', 'Momentum', 'Current Price'];
-
-      var pastLabels = ['Symbol', 'Quality', 'Value', 'Implied Volatility', 'Momentum', 'Current Price', 'Future Price', 'Percent Difference'];
+      var labels = ['Symbol', 'Money Flow Short', 'CDS Spread', 'Implied Volatility', 'Current Price'];
 
       $scope.displayTable = [];
       $scope.labels = labels;
@@ -58,8 +56,8 @@ module.exports = function(app) {
       function sortObject(obj) {
         var lookup = {
           Symbol: 'symbol',
-          Quality: 'Q',
-          Value: 'V',
+          'Money Flow Short': 'MFS',
+          'CDS Spread': 'CDS',
           'Implied Volatility': 'IV',
           Momentum: 'M',
           'Current Price': 'price'
@@ -113,24 +111,22 @@ module.exports = function(app) {
         //"crop" numbers to correct accuracy
         top.forEach(function(elem, i) {
           var sym = elem.symbol
-            , Q = $filter('number')(elem.Q, $scope.accuracy)
-            , V = $filter('number')(elem.V, $scope.accuracy)
+            , MFS = $filter('number')(elem.MFS, $scope.accuracy)
+            , CDS = $filter('number')(elem.CDS, $scope.accuracy)
             , IV = $filter('number')(elem.IV, $scope.accuracy)
-            , M = $filter('number')(elem.M, $scope.accuracy)
             , price = '$' + $filter('number')(elem.price, 2);
 
-          top[i] = [sym, Q, V, IV, M, price];
+          top[i] = [sym, MFS, CDS, IV, price];
         });
 
         bottom.forEach(function(elem, i) {
           var sym = elem.symbol
-            , Q = $filter('number')(elem.Q, $scope.accuracy)
-            , V = $filter('number')(elem.V, $scope.accuracy)
+            , MFS = $filter('number')(elem.MFS, $scope.accuracy)
+            , CDS = $filter('number')(elem.CDS, $scope.accuracy)
             , IV = $filter('number')(elem.IV, $scope.accuracy)
-            , M = $filter('number')(elem.M, $scope.accuracy)
             , price = '$' + $filter('number')(elem.price, 2);
 
-          bottom[i] = [sym, Q, V, IV, M, price];
+          bottom[i] = [sym, MFS, CDS, IV, price];
         });
 
         //display
