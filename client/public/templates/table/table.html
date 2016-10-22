@@ -6,13 +6,24 @@
 <!--<select name="selectDate" id="selectDate" ng-change="updateDate(changeDate)" ng-model="changeDate" ng-options="key for key in dates">
 </select>-->
 
-<div ng-repeat="table in tables track by $index">
-<h1 ng-bind="table.title"></h1>
-<table>
-  <tr>
-    <th ng-repeat="label in table.labels track by $index" ng-bind="label"></th>
-  </tr>
-  <tr class="top_row" ng-repeat="symbol in table.cells track by $index">
-    <td class="top_cell" ng-repeat="entry in symbol track by $index" ng-bind="entry"></th>
-  </tr>
-</table>
+<div ng-repeat="portfolio in portfolios track by $index">
+<h1 ng-bind="portfolio.title"></h1>
+<h4>Beta: {{portfolio.beta}}</h4>
+  <table>
+    <tr>
+      <th ng-repeat="label in portfolio.long.labels track by $index" ng-bind="label"></th>
+    </tr>
+    <tr class="top_row" ng-repeat="symbol in portfolio.long.cells track by $index">
+      <td class="top_cell" ng-repeat="entry in symbol track by $index" ng-bind="entry"></th>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
+      <th ng-repeat="label in portfolio.short.labels track by $index" ng-bind="label"></th>
+    </tr>
+    <tr class="bottom_row" ng-repeat="symbol in portfolio.short.cells track by $index">
+      <td class="bottom_cell" ng-repeat="entry in symbol track by $index" ng-bind="entry"></th>
+    </tr>
+  </table>
+</div>

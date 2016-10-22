@@ -54,41 +54,64 @@ module.exports = function(app) {
       $scope.labels = labels;
 
       function listTable(givenTable) {
-        var table_keys = [];
+        var portfolio_keys = [];
         for (var key in givenTable) {
           if (key[0] !== '_') {
-            table_keys.push(key);
+            portfolio_keys.push(key);
           }
         };
 
-        var tables = [];
-        table_keys.forEach(function(elem) {
-          var table = {
-            labels: [],
-            title: givenTable['_' + elem + '_title'],
-            cells: []
+        var portfolios = [];
+        portfolio_keys.forEach(function(elem) {
+          var portfolio = {
+            title: givenTable[elem]['_title'],
+            beta: $filter('number')(givenTable[elem].beta, $scope.accuracy),
+            short: {
+              labels: [],
+              cells: []
+            },
+            long: {
+              labels: [],
+              cells: []
+            }
           };
-          for (var i in labels) {
-            table.labels.push(labels[i]);
-          }
-          table.labels.push(givenTable['_' + elem + '_header']);
 
-          givenTable[elem].forEach(function(el) {
+          for (var i in labels) {
+            portfolio.long.labels.push(labels[i]);
+            portfolio.short.labels.push(labels[i]);
+          }
+          portfolio.long.labels.push(givenTable[elem]['_long_header']);
+          portfolio.short.labels.push(givenTable[elem]['_short_header']);
+
+          //construct long portfolio
+          givenTable[elem].long.forEach(function(el) {
             var sym = el.symbol
               , price = '$' + $filter('number')(el.price, 2)
               , beta = $filter('number')(el.beta, $scope.accuracy)
               , sharpe = $filter('number')(el.sharpe, $scope.accuracy)
-              , val = $filter('number')(el[elem], $scope.accuracy);
+              , val = $filter('number')(el[givenTable[elem]['_long_val']], $scope.accuracy);
 
-            table.cells.push([sym, price, beta, sharpe, val]);
+
+            portfolio.long.cells.push([sym, price, beta, sharpe, val]);
           });
 
-          tables.push(table);
+          //same for short
+          givenTable[elem].short.forEach(function(el) {
+            var sym = el.symbol
+              , price = '$' + $filter('number')(el.price, 2)
+              , beta = $filter('number')(el.beta, $scope.accuracy)
+              , sharpe = $filter('number')(el.sharpe, $scope.accuracy)
+              , val = $filter('number')(el[givenTable[elem]['_short_val']], $scope.accuracy);
+
+            portfolio.short.cells.push([sym, price, beta, sharpe, val]);
+          });
+
+          portfolios.push(portfolio);
         });
 
         //display
         $timeout(function() {
-          $scope.tables = tables;
+          $scope.portfolios = portfolios;
         });
       }
 
