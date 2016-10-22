@@ -1,0 +1,25 @@
+<div class="logo--center">
+  <img src="/businessduck.jpg" style="width: 100px; height: 100px;"></img>
+</div>
+<h1 class="logo--center">QUAX</h1>
+
+<!--<select name="selectDate" id="selectDate" ng-change="updateDate(changeDate)" ng-model="changeDate" ng-options="key for key in dates">
+</select>-->
+
+<table>
+  <tr>
+    <th ng-repeat="label in topLabels"> <a href="#" ng-click="changeSort(label)" ng-bind="label"></a></th>
+  </tr>
+  <tr class="top_row" ng-repeat="symbol in topTable">
+    <td class="top_cell" ng-repeat="entry in symbol track by $index" ng-bind="entry"></th>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <th ng-repeat="label in botLabels"> <a href="#" ng-click="changeSort(label)" ng-bind="label"></a></th>
+  </tr>
+  <tr class="bottom_row" ng-repeat="symbol in bottomTable">
+    <td class="bottom_cell" ng-repeat="entry in symbol track by $index" ng-bind="entry"></th>
+  </tr>
+</table>

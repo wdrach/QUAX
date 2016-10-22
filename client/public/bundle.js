@@ -131,6 +131,46 @@
 	          }]
 	        }
 	      });
+	    $stateProvider
+	      .state('old-table', {
+	        url: '/old-table',
+	        template: __webpack_require__(17),
+	        controller: 'OldTableCtrl',
+	        resolve: {
+	          'currentAuth': ['$q', '$rootScope', 'Backend', function($q, $rootScope, Backend) {
+	            var def = $q.defer();
+	            Backend.loggedIn().then(function() {
+	              $rootScope.loggedIn = true;
+	              def.resolve();
+	            }, function() {
+	              $rootScope.loggedIn = false;
+	              def.reject();
+	            });
+
+	            return def.promise;
+	          }]
+	        }
+	      });
+	    $stateProvider
+	      .state('old-table-date', {
+	        url: '/old-table/:date',
+	        template: __webpack_require__(17),
+	        controller: 'OldTableCtrl',
+	        resolve: {
+	          'currentAuth': ['$q', '$rootScope', 'Backend', function($q, $rootScope, Backend) {
+	            var def = $q.defer();
+	            Backend.loggedIn().then(function() {
+	              $rootScope.loggedIn = true;
+	              def.resolve();
+	            }, function() {
+	              $rootScope.loggedIn = false;
+	              def.reject();
+	            });
+
+	            return def.promise;
+	          }]
+	        }
+	      });
 	});
 
 	app.run(['$rootScope', '$state', function($rootScope, $state) {
@@ -143,8 +183,8 @@
 	  });
 	}]);
 
-	__webpack_require__(17)(app);
-	__webpack_require__(24)(app);
+	__webpack_require__(18)(app);
+	__webpack_require__(26)(app);
 
 
 /***/ },
@@ -42218,24 +42258,31 @@
 /* 16 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<!--<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>-->\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in topLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in topTable\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in botLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in bottomTable\">\n    <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
+	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<!--<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>-->\n\n<div ng-repeat=\"table in tables track by $index\">\n<h1 ng-bind=\"table.title\"></h1>\n<table>\n  <tr>\n    <th ng-repeat=\"label in table.labels track by $index\" ng-bind=\"label\"></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in table.cells track by $index\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
 
 /***/ },
 /* 17 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<!--<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>-->\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in topLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in topTable\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in botLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in bottomTable\">\n    <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
+
+/***/ },
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(app) {
-	  __webpack_require__(18)(app);
 	  __webpack_require__(19)(app);
 	  __webpack_require__(20)(app);
 	  __webpack_require__(21)(app);
 	  __webpack_require__(22)(app);
 	  __webpack_require__(23)(app);
+	  __webpack_require__(24)(app);
+	  __webpack_require__(25)(app);
 	};
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42279,7 +42326,7 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42313,7 +42360,7 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42339,7 +42386,7 @@
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42362,7 +42409,7 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42397,11 +42444,122 @@
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
 	  app.controller('TableCtrl', [
+	    '$filter',
+	    '$rootScope',
+	    '$sce',
+	    '$scope',
+	    '$state',
+	    '$stateParams',
+	    '$timeout',
+	    'Backend',
+	    function($filter, $rootScope, $sce, $scope, $state, $stateParams, $timeout, Backend) {
+	      if (!$rootScope.loggedIn) {
+	        console.error("not logged in");
+	        $state.go('root');
+	      }
+
+	      Backend.getValidDates().then(function(data) {
+	        $scope.dates = data.data.dates.sort();
+
+	        //now for this last Monday
+	        //YYYYMMDD for any other date
+	        $scope.date = $scope.dates[0];
+	        if ($stateParams.date) {
+	          $scope.date = $stateParams.date;
+	        }
+	        $scope.selectDate = $scope.date;
+
+	        Backend.getTable($scope.date).then(function(data) {
+	          $scope.table = data.data;
+	          listTable(data.data);
+	        });
+	      });
+
+	      //base for no weights
+	      //test (only for date !== now) for equal equity in each metric
+	      //weight for weighing metrics
+	      $scope.mode = 'base';
+
+
+	      //round to N decimal points
+	      $scope.accuracy = 3;
+
+	      //Sort by this value
+	      $scope.sortBy = 'Symbol';
+	      //Ascending/Descending
+	      $scope.ascending = true;
+
+	      //how many values to have in the top/bottom tables
+	      $scope.N = 15;
+
+	      var labels = ['Symbol', 'Price', 'Beta', '1 Mo. Sharpe'];
+
+	      $scope.displayTable = [];
+	      $scope.labels = labels;
+
+	      function listTable(givenTable) {
+	        var table_keys = [];
+	        for (var key in givenTable) {
+	          if (key[0] !== '_') {
+	            table_keys.push(key);
+	          }
+	        };
+
+	        var tables = [];
+	        table_keys.forEach(function(elem) {
+	          var table = {
+	            labels: [],
+	            title: givenTable['_' + elem + '_title'],
+	            cells: []
+	          };
+	          for (var i in labels) {
+	            table.labels.push(labels[i]);
+	          }
+	          table.labels.push(givenTable['_' + elem + '_header']);
+
+	          givenTable[elem].forEach(function(el) {
+	            var sym = el.symbol
+	              , price = '$' + $filter('number')(el.price, 2)
+	              , beta = $filter('number')(el.beta, $scope.accuracy)
+	              , sharpe = $filter('number')(el.sharpe, $scope.accuracy)
+	              , val = $filter('number')(el[elem], $scope.accuracy);
+
+	            table.cells.push([sym, price, beta, sharpe, val]);
+	          });
+
+	          tables.push(table);
+	        });
+
+	        //display
+	        $timeout(function() {
+	          $scope.tables = tables;
+	        });
+	      }
+
+	      $scope.updateDate = function(date) {
+	        $scope.date = date;
+
+	        Backend.getTable($scope.date).then(function(data) {
+	          $scope.table = data.data;
+	          listTable(data.data);
+	        });
+	      }
+	    }
+	  ]);
+	};
+
+
+/***/ },
+/* 25 */
+/***/ function(module, exports) {
+
+	module.exports = function(app) {
+	  app.controller('OldTableCtrl', [
 	    '$filter',
 	    '$rootScope',
 	    '$sce',
@@ -42566,18 +42724,18 @@
 
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(app) {
-	  __webpack_require__(25)(app);
-	  __webpack_require__(26)(app);
 	  __webpack_require__(27)(app);
+	  __webpack_require__(28)(app);
+	  __webpack_require__(29)(app);
 	};
 
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42631,7 +42789,7 @@
 
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports) {
 
 	module.exports = function (app) {
@@ -42716,7 +42874,7 @@
 
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {

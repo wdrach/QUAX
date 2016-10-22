@@ -5,4 +5,5 @@ module.exports = function(app) {
   require('./app/LoginCallbackCtrl.js')(app);
   require('./app/ModalCtrl.js')(app);
   require('./table/TableCtrl.js')(app);
+  require('./table/OldTableCtrl.js')(app);
 };
