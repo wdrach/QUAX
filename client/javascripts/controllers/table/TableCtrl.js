@@ -48,108 +48,50 @@ module.exports = function(app) {
       //how many values to have in the top/bottom tables
       $scope.N = 15;
 
-      var labels = ['Symbol', 'Money Flow Short', 'CDS Spread', 'Implied Volatility', 'Current Price'];
+      var labels = ['Symbol', 'Price', 'Beta', '1 Mo. Sharpe'];
 
       $scope.displayTable = [];
       $scope.labels = labels;
 
-      function sortObject(obj) {
-        var lookup = {
-          Symbol: 'symbol',
-          'Money Flow Short': 'MFS',
-          'CDS Spread': 'CDS',
-          'Implied Volatility': 'IV',
-          Momentum: 'M',
-          'Current Price': 'price'
+      function listTable(givenTable) {
+        var table_keys = [];
+        for (var key in givenTable) {
+          if (key[0] !== '_') {
+            table_keys.push(key);
+          }
         };
 
-        var sb = lookup[$scope.sortBy];
-        var out = [];
-        for (var key in obj) {
-          if (obj[key].symbol && obj[key].symbol !== '_') {
-            out.push(obj[key]);
+        var tables = [];
+        table_keys.forEach(function(elem) {
+          var table = {
+            labels: [],
+            title: givenTable['_' + elem + '_title'],
+            cells: []
+          };
+          for (var i in labels) {
+            table.labels.push(labels[i]);
           }
-        }
+          table.labels.push(givenTable['_' + elem + '_header']);
 
-        out.sort(function (a, b) {
-          var mod = $scope.ascending ? 1 : -1;
-          if (a[sb] > b[sb]) return 1*mod;
-          if (a[sb] < b[sb]) return -1*mod;
-          return 0;
-        });
+          givenTable[elem].forEach(function(el) {
+            var sym = el.symbol
+              , price = '$' + $filter('number')(el.price, 2)
+              , beta = $filter('number')(el.beta, $scope.accuracy)
+              , sharpe = $filter('number')(el.sharpe, $scope.accuracy)
+              , val = $filter('number')(el[elem], $scope.accuracy);
 
-        var newOut = [];
-        out.forEach(function(elem) {
-          if (sb === 'symbol' || typeof(elem[sb]) === 'number') newOut.push(elem);
-        });
+            table.cells.push([sym, price, beta, sharpe, val]);
+          });
 
-        return newOut;
-      }
-
-      function listTable(givenTable) {
-        //set the labels with the little arrow!
-        var topLabels = [];
-        var botLabels = [];
-        labels.forEach(function(elem) {
-          topLabels.push(elem);
-          botLabels.push(elem);
-        });
-        var unicode = $scope.ascending ? ' \u25B2' : ' \u25BC';
-        var bottom_unicode = $scope.ascending ? ' \u25BC' : ' \u25B2';
-        topLabels[labels.indexOf($scope.sortBy)] = $sce.trustAsHtml(labels[labels.indexOf($scope.sortBy)] + unicode);
-        botLabels[labels.indexOf($scope.sortBy)] = $sce.trustAsHtml(labels[labels.indexOf($scope.sortBy)] + bottom_unicode);
-        $scope.topLabels = topLabels;
-        $scope.botLabels = botLabels;
-
-        //sort by the correct value
-        var table = sortObject(givenTable);
-
-        //get top/bottom N
-        var top = table.splice(0, $scope.N);
-        var bottom = table.splice(-1*($scope.N), $scope.N);
-
-        //"crop" numbers to correct accuracy
-        top.forEach(function(elem, i) {
-          var sym = elem.symbol
-            , MFS = $filter('number')(elem.MFS, $scope.accuracy)
-            , CDS = $filter('number')(elem.CDS, $scope.accuracy)
-            , IV = $filter('number')(elem.IV, $scope.accuracy)
-            , price = '$' + $filter('number')(elem.price, 2);
-
-          top[i] = [sym, MFS, CDS, IV, price];
-        });
-
-        bottom.forEach(function(elem, i) {
-          var sym = elem.symbol
-            , MFS = $filter('number')(elem.MFS, $scope.accuracy)
-            , CDS = $filter('number')(elem.CDS, $scope.accuracy)
-            , IV = $filter('number')(elem.IV, $scope.accuracy)
-            , price = '$' + $filter('number')(elem.price, 2);
-
-          bottom[i] = [sym, MFS, CDS, IV, price];
+          tables.push(table);
         });
 
         //display
         $timeout(function() {
-          $scope.topTable = top;
-          $scope.bottomTable = bottom.reverse();
+          $scope.tables = tables;
         });
       }
 
-
-      $scope.changeSort = function(label) {
-        var index = $scope.topLabels.indexOf(label) !== -1 ?
-                    $scope.topLabels.indexOf(label) :
-                    $scope.botLabels.indexOf(label);
-        label = labels[index];
-        if (label === $scope.sortBy) $scope.ascending = !$scope.ascending;
-        else {
-          $scope.sortBy = label;
-          $scope.ascending = (label === 'Symbol') ? true : false;
-        }
-
-        listTable($scope.table);
-      }
       $scope.updateDate = function(date) {
         $scope.date = date;
 

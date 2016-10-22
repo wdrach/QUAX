@@ -106,6 +106,14 @@ table {
   font-family: 'Lato', sans-serif;
 }
 
+div {
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+}
+
 th {
   padding: 10px 20px;
   text-align: center;

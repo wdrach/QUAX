@@ -1,5 +1,5 @@
 module.exports = function(app) {
-  app.controller('TableCtrl', [
+  app.controller('OldTableCtrl', [
     '$filter',
     '$rootScope',
     '$sce',
