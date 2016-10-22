@@ -65,6 +65,7 @@ module.exports = function(app) {
         portfolio_keys.forEach(function(elem) {
           var portfolio = {
             title: givenTable[elem]['_title'],
+            beta: $filter('number')(givenTable[elem].beta, $scope.accuracy),
             short: {
               labels: [],
               cells: []

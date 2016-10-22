@@ -8,6 +8,7 @@
 
 <div ng-repeat="portfolio in portfolios track by $index">
 <h1 ng-bind="portfolio.title"></h1>
+<h4>Beta: {{portfolio.beta}}</h4>
   <table>
     <tr>
       <th ng-repeat="label in portfolio.long.labels track by $index" ng-bind="label"></th>

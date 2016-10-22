@@ -245,6 +245,35 @@ module.exports.getTable = (req, res) => {
       out.MF.short[key].beta = -1*out.MF.short[key].beta;
     }
 
+    //compute betas
+    var beta = 0;
+    var short_weight = .022;
+    var long_weight = .022;
+    for (var i in out.IV.short) {
+      beta += out.IV.short[i].beta*short_weight;
+    }
+    for (var i in out.IV.long) {
+      beta += out.IV.long[i].beta*long_weight;
+    }
+    out.IV.beta = beta;
+    beta = 0;
+    for (var i in out.CDS.short) {
+      beta += out.CDS.short[i].beta*short_weight;
+    }
+    for (var i in out.CDS.long) {
+      beta += out.CDS.long[i].beta*long_weight;
+    }
+    out.CDS.beta = beta;
+    beta = 0;
+    long_weight = .033;
+    for (var i in out.MF.short) {
+      beta += out.MF.short[i].beta*short_weight;
+    }
+    for (var i in out.MF.long) {
+      beta += out.MF.long[i].beta*long_weight;
+    }
+    out.MF.beta = beta;
+
     //:shipit:
     return res.json(out);
   }

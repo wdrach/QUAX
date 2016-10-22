@@ -42258,7 +42258,7 @@
 /* 16 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<!--<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>-->\n\n<div ng-repeat=\"portfolio in portfolios track by $index\">\n<h1 ng-bind=\"portfolio.title\"></h1>\n  <table>\n    <tr>\n      <th ng-repeat=\"label in portfolio.long.labels track by $index\" ng-bind=\"label\"></th>\n    </tr>\n    <tr class=\"top_row\" ng-repeat=\"symbol in portfolio.long.cells track by $index\">\n      <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n    </tr>\n  </table>\n\n  <table>\n    <tr>\n      <th ng-repeat=\"label in portfolio.short.labels track by $index\" ng-bind=\"label\"></th>\n    </tr>\n    <tr class=\"bottom_row\" ng-repeat=\"symbol in portfolio.short.cells track by $index\">\n      <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n    </tr>\n  </table>\n</div>\n";
+	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<!--<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>-->\n\n<div ng-repeat=\"portfolio in portfolios track by $index\">\n<h1 ng-bind=\"portfolio.title\"></h1>\n<h4>Beta: {{portfolio.beta}}</h4>\n  <table>\n    <tr>\n      <th ng-repeat=\"label in portfolio.long.labels track by $index\" ng-bind=\"label\"></th>\n    </tr>\n    <tr class=\"top_row\" ng-repeat=\"symbol in portfolio.long.cells track by $index\">\n      <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n    </tr>\n  </table>\n\n  <table>\n    <tr>\n      <th ng-repeat=\"label in portfolio.short.labels track by $index\" ng-bind=\"label\"></th>\n    </tr>\n    <tr class=\"bottom_row\" ng-repeat=\"symbol in portfolio.short.cells track by $index\">\n      <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n    </tr>\n  </table>\n</div>\n";
 
 /***/ },
 /* 17 */
@@ -42514,6 +42514,7 @@
 	        portfolio_keys.forEach(function(elem) {
 	          var portfolio = {
 	            title: givenTable[elem]['_title'],
+	            beta: $filter('number')(givenTable[elem].beta, $scope.accuracy),
 	            short: {
 	              labels: [],
 	              cells: []
