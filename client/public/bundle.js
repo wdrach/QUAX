@@ -42258,7 +42258,7 @@
 /* 16 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<!--<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>-->\n\n<div ng-repeat=\"table in tables track by $index\">\n<h1 ng-bind=\"table.title\"></h1>\n<table>\n  <tr>\n    <th ng-repeat=\"label in table.labels track by $index\" ng-bind=\"label\"></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in table.cells track by $index\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
+	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<!--<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>-->\n\n<div ng-repeat=\"portfolio in portfolios track by $index\">\n<h1 ng-bind=\"portfolio.title\"></h1>\n  <table>\n    <tr>\n      <th ng-repeat=\"label in portfolio.long.labels track by $index\" ng-bind=\"label\"></th>\n    </tr>\n    <tr class=\"top_row\" ng-repeat=\"symbol in portfolio.long.cells track by $index\">\n      <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n    </tr>\n  </table>\n\n  <table>\n    <tr>\n      <th ng-repeat=\"label in portfolio.short.labels track by $index\" ng-bind=\"label\"></th>\n    </tr>\n    <tr class=\"bottom_row\" ng-repeat=\"symbol in portfolio.short.cells track by $index\">\n      <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n    </tr>\n  </table>\n</div>\n";
 
 /***/ },
 /* 17 */
@@ -42503,41 +42503,63 @@
 	      $scope.labels = labels;
 
 	      function listTable(givenTable) {
-	        var table_keys = [];
+	        var portfolio_keys = [];
 	        for (var key in givenTable) {
 	          if (key[0] !== '_') {
-	            table_keys.push(key);
+	            portfolio_keys.push(key);
 	          }
 	        };
 
-	        var tables = [];
-	        table_keys.forEach(function(elem) {
-	          var table = {
-	            labels: [],
-	            title: givenTable['_' + elem + '_title'],
-	            cells: []
+	        var portfolios = [];
+	        portfolio_keys.forEach(function(elem) {
+	          var portfolio = {
+	            title: givenTable[elem]['_title'],
+	            short: {
+	              labels: [],
+	              cells: []
+	            },
+	            long: {
+	              labels: [],
+	              cells: []
+	            }
 	          };
-	          for (var i in labels) {
-	            table.labels.push(labels[i]);
-	          }
-	          table.labels.push(givenTable['_' + elem + '_header']);
 
-	          givenTable[elem].forEach(function(el) {
+	          for (var i in labels) {
+	            portfolio.long.labels.push(labels[i]);
+	            portfolio.short.labels.push(labels[i]);
+	          }
+	          portfolio.long.labels.push(givenTable[elem]['_long_header']);
+	          portfolio.short.labels.push(givenTable[elem]['_short_header']);
+
+	          //construct long portfolio
+	          givenTable[elem].long.forEach(function(el) {
 	            var sym = el.symbol
 	              , price = '$' + $filter('number')(el.price, 2)
 	              , beta = $filter('number')(el.beta, $scope.accuracy)
 	              , sharpe = $filter('number')(el.sharpe, $scope.accuracy)
-	              , val = $filter('number')(el[elem], $scope.accuracy);
+	              , val = $filter('number')(el[givenTable[elem]['_long_val']], $scope.accuracy);
 
-	            table.cells.push([sym, price, beta, sharpe, val]);
+
+	            portfolio.long.cells.push([sym, price, beta, sharpe, val]);
 	          });
 
-	          tables.push(table);
+	          //same for short
+	          givenTable[elem].short.forEach(function(el) {
+	            var sym = el.symbol
+	              , price = '$' + $filter('number')(el.price, 2)
+	              , beta = $filter('number')(el.beta, $scope.accuracy)
+	              , sharpe = $filter('number')(el.sharpe, $scope.accuracy)
+	              , val = $filter('number')(el[givenTable[elem]['_short_val']], $scope.accuracy);
+
+	            portfolio.short.cells.push([sym, price, beta, sharpe, val]);
+	          });
+
+	          portfolios.push(portfolio);
 	        });
 
 	        //display
 	        $timeout(function() {
-	          $scope.tables = tables;
+	          $scope.portfolios = portfolios;
 	        });
 	      }
 

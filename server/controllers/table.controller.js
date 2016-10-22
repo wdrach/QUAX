@@ -170,25 +170,33 @@ module.exports.getTable = (req, res) => {
     });
 
     var out = {
-      IVS: [],
-      IVL: [],
-      CDSS: [],
-      CDSL: [],
-      MFS: [],
-      MFL: [],
-      _IVS_title: "Short IV",
-      _IVS_header: "Implied Volatility",
-      _IVL_title: "Long IV",
-      _IVL_header: "Implied Volatility",
-      _CDSS_title: "Short CDS",
-      _CDSS_header: "5yr. CDS Spread",
-      _CDSL_title: "Long CDS",
-      _CDSL_header: "5yr. CDS Spread",
-      _MFS_title: "Short Money Flow",
-      _MFS_header: "Ratio of Money Flow Change",
-      _MFL_title: "Long Money Flow",
-      _MFL_header: "Block Money Flow Monthly"
-
+      IV: {
+        long: [],
+        short: [],
+        _title: "Implied Volatility",
+        _short_header: "Implied Volatility",
+        _long_header: "Implied Volatility",
+        _short_val: "IVS",
+        _long_val: "IVL"
+      },
+      MF: {
+        long: [],
+        short: [],
+        _title: "Money Flow",
+        _short_header: "Ratio of MF Change",
+        _long_header: "Block Money Flow Monthly",
+        _short_val: "MFS",
+        _long_val: "MFL"
+      },
+      CDS: {
+        long: [],
+        short: [],
+        _title: "CDS Spread",
+        _long_header: "5yr. CDS Spread",
+        _short_header: "5yr. CDS Spread",
+        _short_val: "CDSS",
+        _long_val: "CDSL"
+      }
     };
 
     var IV = []
@@ -207,34 +215,34 @@ module.exports.getTable = (req, res) => {
     }
 
     IV = IV.sort(function(a, b) {
-      return a.IV - b.IV;
+      return b.IV - a.IV;
     });
     CDS = CDS.sort(function(a, b) {
-      return a.CDS - b.CDS;
+      return b.CDS - a.CDS;
     });
     MFL = MFL.sort(function(a, b) {
-      return a.MFL - b.MFL;
+      return b.MFL - a.MFL;
     });
     MFS = MFS.sort(function(a, b) {
-      return a.MFS - b.MFS;
+      return b.MFS - a.MFS;
     });
 
-    out.IVS = IV.splice(0, 15);
-    out.IVL = IV.splice(-15, 15).reverse();
-    out.CDSS = CDS.splice(0, 15);
-    out.CDSL = CDS.splice(-15, 15).reverse();
-    out.MFL = MFL.splice(0, 10);
-    out.MFS = MFS.splice(-15, 15).reverse();
+    out.IV.long = IV.splice(0, 15);
+    out.IV.short = IV.splice(-15, 15).reverse();
+    out.CDS.long = CDS.splice(0, 15);
+    out.CDS.short = CDS.splice(-15, 15).reverse();
+    out.MF.long = MFL.splice(0, 10);
+    out.MF.short = MFS.splice(-15, 15).reverse();
 
     //have to flip betas for shorts
-    for (var key in out.IVS) {
-      out.IVS[key].beta = -1*out.IVS[key].beta;
+    for (var key in out.IV.short) {
+      out.IV.short[key].beta = -1*out.IV.short[key].beta;
     }
-    for (var key in out.CDSS) {
-      out.CDSS[key].beta = -1*out.CDSS[key].beta;
+    for (var key in out.CDS.short) {
+      out.CDS.short[key].beta = -1*out.CDS.short[key].beta;
     }
-    for (var key in out.MFS) {
-      out.MFS[key].beta = -1*out.MFS[key].beta;
+    for (var key in out.MF.short) {
+      out.MF.short[key].beta = -1*out.MF.short[key].beta;
     }
 
     //:shipit:
