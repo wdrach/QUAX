@@ -45,16 +45,59 @@ var s3 = new AWS.S3()
  * the sharpe ratio, which should be "Sharpe:M-1"
  */
 
-//strings and bloomberg IDs for the values we are using
-var config = {
-  q_str: 'Price-to-Book',
-  q_id: 'P/B:Q',
-  v_str: 'Price-to-Earnings',
-  v_id: 'P/E:Q',
-  iv_str: 'Implied Volatility, 3 Month, 100%',
-  iv_id: '3M IVOL 100% Mny',
-  m_str: 'Price Rate of Change',
-  m_id: 'Rate of Change: Period=1'
+function calculateBeta(p) {
+  var beta = 0;
+
+  for (var i in p.short) {
+    beta += p.short[i].beta*p.short[i].weight;
+  }
+  for (var i in p.long) {
+    beta += p.long[i].beta*p.long[i].weight;
+  }
+
+  p.beta = beta;
+
+  return p;
+};
+
+function balanceBetas(p) {
+  while (p.beta < -.4 || p.beta > .4) {
+    if (p.beta < -.4) {
+      var worst = -1;
+      var worst_beta = 2;
+      for (var sym in p.short) {
+        var b = p.short[sym].beta*p.short[sym].weight;
+        if (b < worst_beta && p.short[sym].weight >= .001) worst = sym;
+      }
+      p.short[worst].weight -= .001;
+      var best = -1;
+      var best_beta = -2;
+      for (var sym in p.short) {
+        var b = p.short[sym].beta*p.short[sym].weight;
+        if (b > best_beta && p.short[sym].weight >= .001) best = sym;
+      }
+      p.short[best].weight += .001;
+    }
+    if (p.beta < -.4) {
+      var worst = -1;
+      var worst_beta = -2;
+      for (var sym in p.long) {
+        var b = p.long[sym].beta*p.long[sym].weight;
+        if (b > worst_beta && p.long[sym].weight >= .001) worst = sym;
+      }
+      p.long[worst].weight -= .001;
+      var best = -1;
+      var best_beta = 2;
+      for (var sym in p.long) {
+        var b = p.long[sym].beta*p.long[sym].weight;
+        if (b < best_beta && p.long[sym].weight >= .001) best = sym;
+      }
+      p.long[best].weight += .001;
+    }
+    p = calculateBeta(p);
+  }
+
+  return p;
 };
 
 module.exports.getTable = (req, res) => {
@@ -246,33 +289,35 @@ module.exports.getTable = (req, res) => {
     }
 
     //compute betas
-    var beta = 0;
-    var short_weight = .022;
-    var long_weight = .022;
+    var short_weight = .0666;
+    var long_weight = .0666;
     for (var i in out.IV.short) {
-      beta += out.IV.short[i].beta*short_weight;
+      out.IV.short[i].weight = short_weight;
     }
     for (var i in out.IV.long) {
-      beta += out.IV.long[i].beta*long_weight;
+      out.IV.long[i].weight = long_weight;
     }
-    out.IV.beta = beta;
-    beta = 0;
+    out.IV = calculateBeta(out.IV);
+    out.IV = balanceBetas(out.IV);
+
     for (var i in out.CDS.short) {
-      beta += out.CDS.short[i].beta*short_weight;
+      out.CDS.short[i].weight = short_weight;
     }
     for (var i in out.CDS.long) {
-      beta += out.CDS.long[i].beta*long_weight;
+      out.CDS.long[i].weight = long_weight;
     }
-    out.CDS.beta = beta;
-    beta = 0;
-    long_weight = .033;
+    out.CDS = calculateBeta(out.CDS);
+    out.CDS = balanceBetas(out.CDS);
+
+    long_weight = .1;
     for (var i in out.MF.short) {
-      beta += out.MF.short[i].beta*short_weight;
+      out.MF.short[i].weight = short_weight;
     }
     for (var i in out.MF.long) {
-      beta += out.MF.long[i].beta*long_weight;
+      out.MF.long[i].weight = long_weight;
     }
-    out.MF.beta = beta;
+    out.MF = calculateBeta(out.MF);
+    out.MF = balanceBetas(out.MF);
 
     //:shipit:
     return res.json(out);
