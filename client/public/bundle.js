@@ -42258,7 +42258,7 @@
 /* 16 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<!--<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>-->\n\n<div ng-repeat=\"portfolio in portfolios track by $index\">\n<h1 ng-bind=\"portfolio.title\"></h1>\n<h4>Beta: {{portfolio.beta}}</h4>\n  <table>\n    <tr>\n      <th ng-repeat=\"label in portfolio.long.labels track by $index\" ng-bind=\"label\"></th>\n    </tr>\n    <tr class=\"top_row\" ng-repeat=\"symbol in portfolio.long.cells track by $index\">\n      <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n    </tr>\n  </table>\n\n  <table>\n    <tr>\n      <th ng-repeat=\"label in portfolio.short.labels track by $index\" ng-bind=\"label\"></th>\n    </tr>\n    <tr class=\"bottom_row\" ng-repeat=\"symbol in portfolio.short.cells track by $index\">\n      <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n    </tr>\n  </table>\n</div>\n";
+	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<!--<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>-->\n<div class=\"form\">\n  <form href=\"#\">\n    <span class=\"dollar-input\">\n      $\n      <input ng-model=\"dollars\">\n      </input>\n    </div>\n  </form>\n  <button ng-click=\"listTable(table)\" class=\"action-small\">Update</button>\n</div>\n\n<br>\n<div class=\"dollar-error\" ng-show=\"dollarError\">\n  That is not a valid dollar amount.\n</div>\n\n<div ng-repeat=\"portfolio in portfolios track by $index\">\n<h1 ng-bind=\"portfolio.title\"></h1>\n<h4>Beta: {{portfolio.beta}}</h4>\n  <table>\n    <tr>\n      <th ng-repeat=\"label in portfolio.long.labels track by $index\" ng-bind=\"label\"></th>\n    </tr>\n    <tr class=\"top_row\" ng-repeat=\"symbol in portfolio.long.cells track by $index\">\n      <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n    </tr>\n  </table>\n\n  <table>\n    <tr>\n      <th ng-repeat=\"label in portfolio.short.labels track by $index\" ng-bind=\"label\"></th>\n    </tr>\n    <tr class=\"bottom_row\" ng-repeat=\"symbol in portfolio.short.cells track by $index\">\n      <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n    </tr>\n  </table>\n</div>\n";
 
 /***/ },
 /* 17 */
@@ -42485,6 +42485,9 @@
 	      //weight for weighing metrics
 	      $scope.mode = 'base';
 
+	      //number of dollars in our portfolio
+	      $scope.dollars = "10000000";
+	      $scope.dollarError = false;
 
 	      //round to N decimal points
 	      $scope.accuracy = 3;
@@ -42511,6 +42514,19 @@
 	        };
 
 	        var portfolios = [];
+	        var d = parseInt($scope.dollars);
+	        if (isNaN(d)) {
+	          $timeout(function() {
+	            $scope.dollarError = true;
+	          });
+	          return;
+	        }
+	        else {
+	          $timeout(function() {
+	            $scope.dollarError = false;
+	          });
+	        }
+	        var dollars = Math.floor(d/portfolio_keys.length);
 	        portfolio_keys.forEach(function(elem) {
 	          var portfolio = {
 	            title: givenTable[elem]['_title'],
@@ -42534,7 +42550,6 @@
 	          portfolio.long.labels.push('Weight', 'Amount');
 	          portfolio.short.labels.push('Weight', 'Amount');
 
-	          var dollars = 10000000;
 
 	          //construct long portfolio
 	          givenTable[elem].long.forEach(function(el) {
@@ -42571,6 +42586,8 @@
 	          $scope.portfolios = portfolios;
 	        });
 	      }
+
+	      $scope.listTable = listTable;
 
 	      $scope.updateDate = function(date) {
 	        $scope.date = date;

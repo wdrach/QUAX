@@ -36,6 +36,9 @@ module.exports = function(app) {
       //weight for weighing metrics
       $scope.mode = 'base';
 
+      //number of dollars in our portfolio
+      $scope.dollars = "10000000";
+      $scope.dollarError = false;
 
       //round to N decimal points
       $scope.accuracy = 3;
@@ -62,6 +65,19 @@ module.exports = function(app) {
         };
 
         var portfolios = [];
+        var d = parseInt($scope.dollars);
+        if (isNaN(d)) {
+          $timeout(function() {
+            $scope.dollarError = true;
+          });
+          return;
+        }
+        else {
+          $timeout(function() {
+            $scope.dollarError = false;
+          });
+        }
+        var dollars = Math.floor(d/portfolio_keys.length);
         portfolio_keys.forEach(function(elem) {
           var portfolio = {
             title: givenTable[elem]['_title'],
@@ -85,7 +101,6 @@ module.exports = function(app) {
           portfolio.long.labels.push('Weight', 'Amount');
           portfolio.short.labels.push('Weight', 'Amount');
 
-          var dollars = 10000000;
 
           //construct long portfolio
           givenTable[elem].long.forEach(function(el) {
@@ -122,6 +137,8 @@ module.exports = function(app) {
           $scope.portfolios = portfolios;
         });
       }
+
+      $scope.listTable = listTable;
 
       $scope.updateDate = function(date) {
         $scope.date = date;

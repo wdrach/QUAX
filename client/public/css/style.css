@@ -51,6 +51,23 @@
   border-radius: 0px;
 }
 
+.action-small {
+  margin: auto;
+  margin-top: .5rem;
+  padding: .2rem .5rem .2rem .5rem;
+  border: none;
+  display: block;
+  color: #FFFFFF;
+  background: #F45D30;
+}
+
+.action-small:hover {
+  color: #F45D30;
+  background: #FFFFFF;
+  border: 2px #1F1F1F solid;
+  border-radius: 0px;
+}
+
 .blue-action {
   margin: auto;
   margin-top: 3rem;
@@ -145,4 +162,25 @@ td {
 
 .bottom_row:hover {
   color: #B30000;
+}
+
+.form {
+  font-family: 'Lato', sans-serif;
+  color: white;
+  background: #F45D30;
+  padding: .5rem .5rem;
+  width: 10rem;
+  margin: auto;
+}
+
+.dollar-input input{
+  border: 0;
+  background: #F45D30;
+  color: white;
+  font-size: 110$;
+}
+
+.dollar-error {
+  text-align: center;
+  color: #FF5050;
 }
