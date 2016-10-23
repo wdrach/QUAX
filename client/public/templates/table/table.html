@@ -5,6 +5,21 @@
 
 <!--<select name="selectDate" id="selectDate" ng-change="updateDate(changeDate)" ng-model="changeDate" ng-options="key for key in dates">
 </select>-->
+<div class="form">
+  <form href="#">
+    <span class="dollar-input">
+      $
+      <input ng-model="dollars">
+      </input>
+    </div>
+  </form>
+  <button ng-click="listTable(table)" class="action-small">Update</button>
+</div>
+
+<br>
+<div class="dollar-error" ng-show="dollarError">
+  That is not a valid dollar amount.
+</div>
 
 <div ng-repeat="portfolio in portfolios track by $index">
 <h1 ng-bind="portfolio.title"></h1>
