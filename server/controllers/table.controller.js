@@ -4,47 +4,6 @@ var AWS = require('aws-sdk')
 var s3 = new AWS.S3()
   , bucket = 'quax';
 
-/* Data format:
- * {
- *   _date: 'YYYYMMDD',
- *   _q_metric_str: <text description of q metric>,
- *   _q_metric_id: <Bloomberg field for the q metric>,
- *   _v_metric_str: <desc>,
- *   _v_metric_id: <id>,
- *   _iv_metric_str: <desc>,
- *   _iv_metric_id: <id>,
- *   _m_metric_str: <desc>,
- *   _m_metric_id: <id>,
- *   <symbol 1>: {
- *     Q: <Q value>,
- *     V: <val>,
- *     IV: <val>,
- *     M: <val>,
- *     price: <current price>,
- *     future_price: <future price>,
- *     sharpe: <1mo sharpe>,
- *     symbol: <symbol 1>,
- *     name: <full company name>,
- *     ticker: <bloomberg symbol, e.g. AAPL US EQUITY>
- *   },
- *   <symbol 2>: ...
- * }
- *
- * Clean JSON format:
- * [{
- *   ticker: <ticker>,
- *   symbol: <symbol>,
- *   name: <name>,
- *   <field1>: <val>,
- *   <field2> ...,
- *   price: <price>
- * }]
- *
- * where fields are ids that are either in the config
- * or might be used for some purpose. This INCLUDES
- * the sharpe ratio, which should be "Sharpe:M-1"
- */
-
 function calculateBeta(p) {
   var beta = 0;
 

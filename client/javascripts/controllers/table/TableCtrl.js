@@ -82,6 +82,10 @@ module.exports = function(app) {
           }
           portfolio.long.labels.push(givenTable[elem]['_long_header']);
           portfolio.short.labels.push(givenTable[elem]['_short_header']);
+          portfolio.long.labels.push('Weight', 'Amount');
+          portfolio.short.labels.push('Weight', 'Amount');
+
+          var dollars = 10000000;
 
           //construct long portfolio
           givenTable[elem].long.forEach(function(el) {
@@ -89,10 +93,12 @@ module.exports = function(app) {
               , price = '$' + $filter('number')(el.price, 2)
               , beta = $filter('number')(el.beta, $scope.accuracy)
               , sharpe = $filter('number')(el.sharpe, $scope.accuracy)
-              , val = $filter('number')(el[givenTable[elem]['_long_val']], $scope.accuracy);
+              , val = $filter('number')(el[givenTable[elem]['_long_val']], $scope.accuracy)
+              , weight = $filter('number')(el.weight*100, 1) + '%'
+              , amount = Math.floor(el.weight*dollars/el.price);
 
 
-            portfolio.long.cells.push([sym, price, beta, sharpe, val]);
+            portfolio.long.cells.push([sym, price, beta, sharpe, val, weight, amount]);
           });
 
           //same for short
@@ -101,9 +107,11 @@ module.exports = function(app) {
               , price = '$' + $filter('number')(el.price, 2)
               , beta = $filter('number')(el.beta, $scope.accuracy)
               , sharpe = $filter('number')(el.sharpe, $scope.accuracy)
-              , val = $filter('number')(el[givenTable[elem]['_short_val']], $scope.accuracy);
+              , val = $filter('number')(el[givenTable[elem]['_short_val']], $scope.accuracy)
+              , weight = $filter('number')(el.weight*100, 1) + '%'
+              , amount = Math.floor(el.weight*dollars/el.price);
 
-            portfolio.short.cells.push([sym, price, beta, sharpe, val]);
+            portfolio.short.cells.push([sym, price, beta, sharpe, val, weight, amount]);
           });
 
           portfolios.push(portfolio);
