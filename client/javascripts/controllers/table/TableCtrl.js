@@ -38,6 +38,9 @@ module.exports = function(app) {
 
       //number of dollars in our portfolio
       $scope.dollars = "10000000";
+      $scope.portfolio_dollars = {};
+      $scope.previous_pd = {};
+      $scope.previous_dollars = "10000000";
       $scope.dollarError = false;
 
       //round to N decimal points
@@ -77,10 +80,37 @@ module.exports = function(app) {
             $scope.dollarError = false;
           });
         }
-        var dollars = Math.floor(d/portfolio_keys.length);
+
+        var total_dollars = 0;
+        var rebalance = $scope.dollars !== $scope.previous_dollars;
+
         portfolio_keys.forEach(function(elem) {
+          d = $scope.portfolio_dollars[elem];
+          if (!d) {
+            $scope.portfolio_dollars[elem] = Math.floor($scope.dollars/portfolio_keys.length);
+            $scope.previous_pd[elem] = Math.floor($scope.dollars/portfolio_keys.length);
+          }
+          else if (rebalance) {
+            $scope.portfolio_dollars[elem] = Math.floor($scope.dollars*$scope.previous_pd[elem]/$scope.previous_dollars);
+          }
+          else if (isNaN(d)) {
+            $timeout(function() {
+              $scope.dollarError = true;
+            });
+            return;
+          }
+          else {
+            $timeout(function() {
+              $scope.dollarError = false;
+            });
+          }
+
+          var dollars = Math.floor($scope.portfolio_dollars[elem]);
+          total_dollars += dollars;
+
           var portfolio = {
             title: givenTable[elem]['_title'],
+            key: elem,
             beta: $filter('number')(givenTable[elem].beta, $scope.accuracy),
             short: {
               labels: [],
@@ -135,6 +165,9 @@ module.exports = function(app) {
         //display
         $timeout(function() {
           $scope.portfolios = portfolios;
+          $scope.dollars = total_dollars;
+          $scope.previous_pd = $scope.portfolio_dollars;
+          $scope.previous_dollars = $scope.dollars;
         });
       }
 
