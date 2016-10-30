@@ -191,6 +191,15 @@ td {
   color: #FF5050;
   width: 2rem;
   font-size: 100%;
+  text-align: right;
+}
+
+.percent-input input {
+  border: 0;
+  color: #FF5050;
+  width: 6rem;
+  font-size: 100%;
+  text-align: right;
 }
 
 .dollar-error {
