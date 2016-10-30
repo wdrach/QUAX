@@ -11,15 +11,31 @@
     <th class="form-head" ng-repeat="portfolio in portfolios track by $index" ng-bind="portfolio.title"></th>
     <th class="form-head">Cash Percentage</th>
     <th class="form-head">Total Investment</th>
-    <th class="form-head"></th>
+    <th class="form-head">
+      <button ng-click="percent = !percent" ng-show="percent" class="action-small">
+        Dollar
+      </button>
+      <button ng-click="percent = !percent" ng-show="!percent" class="action-small">
+        Percent
+      </button>
+    </th>
   </tr>
   <tr class="form-row">
-    <td class="form-cell" ng-repeat="portfolio in portfolios track by $index">
+    <td class="form-cell" ng-show="!percent" ng-repeat="portfolio in portfolios track by $index">
       <form href="#">
         <span class="dollar-input">
           $
           <input ng-model="portfolio_dollars[portfolio.key]">
           </input>
+        </div>
+      </form>
+    </td>
+    <td class="form-cell" ng-show="percent" ng-repeat="portfolio in portfolios track by $index">
+      <form href="#">
+        <span class="dollar-input">
+          <input ng-model="portfolio_percent[portfolio.key]">
+          </input>
+          %
         </div>
       </form>
     </td>
@@ -50,6 +66,9 @@
 <br>
 <div class="dollar-error" ng-show="dollarError">
   That is not a valid dollar amount.
+</div>
+<div class="dollar-error" ng-show="percentError">
+  That is not a valid percentage.
 </div>
 
 <div ng-repeat="portfolio in portfolios track by $index">

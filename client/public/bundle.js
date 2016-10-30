@@ -42258,7 +42258,7 @@
 /* 16 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<!--<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>-->\n\n<table class=\"form\">\n  <tr class=\"form-row\">\n    <th class=\"form-head\" ng-repeat=\"portfolio in portfolios track by $index\" ng-bind=\"portfolio.title\"></th>\n    <th class=\"form-head\">Cash Percentage</th>\n    <th class=\"form-head\">Total Investment</th>\n    <th class=\"form-head\"></th>\n  </tr>\n  <tr class=\"form-row\">\n    <td class=\"form-cell\" ng-repeat=\"portfolio in portfolios track by $index\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          $\n          <input ng-model=\"portfolio_dollars[portfolio.key]\">\n          </input>\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <span class=\"cash-input\">\n          <input ng-model=\"cash\">\n          </input>\n          %\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          $\n          <input ng-model=\"dollars\">\n          </input>\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <button ng-click=\"listTable(table)\" class=\"action-small\">Update</button>\n    </td>\n  </tr>\n</table>\n\n<br>\n<div class=\"dollar-error\" ng-show=\"dollarError\">\n  That is not a valid dollar amount.\n</div>\n\n<div ng-repeat=\"portfolio in portfolios track by $index\">\n<h1 ng-bind=\"portfolio.title\"></h1>\n<h4>Beta: {{portfolio.beta}}</h4>\n  <table>\n    <tr>\n      <th ng-repeat=\"label in portfolio.long.labels track by $index\" ng-bind=\"label\"></th>\n    </tr>\n    <tr class=\"top_row\" ng-repeat=\"symbol in portfolio.long.cells track by $index\">\n      <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n    </tr>\n  </table>\n\n  <table>\n    <tr>\n      <th ng-repeat=\"label in portfolio.short.labels track by $index\" ng-bind=\"label\"></th>\n    </tr>\n    <tr class=\"bottom_row\" ng-repeat=\"symbol in portfolio.short.cells track by $index\">\n      <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n    </tr>\n  </table>\n</div>\n";
+	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<!--<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>-->\n\n<table class=\"form\">\n  <tr class=\"form-row\">\n    <th class=\"form-head\" ng-repeat=\"portfolio in portfolios track by $index\" ng-bind=\"portfolio.title\"></th>\n    <th class=\"form-head\">Cash Percentage</th>\n    <th class=\"form-head\">Total Investment</th>\n    <th class=\"form-head\">\n      <button ng-click=\"percent = !percent\" ng-show=\"percent\" class=\"action-small\">\n        Dollar\n      </button>\n      <button ng-click=\"percent = !percent\" ng-show=\"!percent\" class=\"action-small\">\n        Percent\n      </button>\n    </th>\n  </tr>\n  <tr class=\"form-row\">\n    <td class=\"form-cell\" ng-show=\"!percent\" ng-repeat=\"portfolio in portfolios track by $index\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          $\n          <input ng-model=\"portfolio_dollars[portfolio.key]\">\n          </input>\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\" ng-show=\"percent\" ng-repeat=\"portfolio in portfolios track by $index\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          <input ng-model=\"portfolio_percent[portfolio.key]\">\n          </input>\n          %\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <span class=\"cash-input\">\n          <input ng-model=\"cash\">\n          </input>\n          %\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          $\n          <input ng-model=\"dollars\">\n          </input>\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <button ng-click=\"listTable(table)\" class=\"action-small\">Update</button>\n    </td>\n  </tr>\n</table>\n\n<br>\n<div class=\"dollar-error\" ng-show=\"dollarError\">\n  That is not a valid dollar amount.\n</div>\n<div class=\"dollar-error\" ng-show=\"percentError\">\n  That is not a valid percentage.\n</div>\n\n<div ng-repeat=\"portfolio in portfolios track by $index\">\n<h1 ng-bind=\"portfolio.title\"></h1>\n<h4>Beta: {{portfolio.beta}}</h4>\n  <table>\n    <tr>\n      <th ng-repeat=\"label in portfolio.long.labels track by $index\" ng-bind=\"label\"></th>\n    </tr>\n    <tr class=\"top_row\" ng-repeat=\"symbol in portfolio.long.cells track by $index\">\n      <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n    </tr>\n  </table>\n\n  <table>\n    <tr>\n      <th ng-repeat=\"label in portfolio.short.labels track by $index\" ng-bind=\"label\"></th>\n    </tr>\n    <tr class=\"bottom_row\" ng-repeat=\"symbol in portfolio.short.cells track by $index\">\n      <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n    </tr>\n  </table>\n</div>\n";
 
 /***/ },
 /* 17 */
@@ -42488,10 +42488,13 @@
 	      //number of dollars in our portfolio
 	      $scope.dollars = "10000000";
 	      $scope.portfolio_dollars = {};
+	      $scope.portfolio_percent = {};
 	      $scope.previous_pd = {};
 	      $scope.previous_dollars = "10000000";
 	      $scope.cash = "5";
+	      $scope.percent = 0;
 	      $scope.dollarError = false;
+	      $scope.percentError = false;
 
 	      //round to N decimal points
 	      $scope.accuracy = 3;
@@ -42519,7 +42522,7 @@
 
 	        var portfolios = [];
 	        var d = parseInt($scope.dollars);
-	        var cash = parseInt($scope.cash);
+	        var cash = parseFloat($scope.cash);
 	        if (isNaN(d) || isNaN(cash) || cash > 100) {
 	          $timeout(function() {
 	            $scope.dollarError = true;
@@ -42532,23 +42535,30 @@
 	          });
 	        }
 
-	        cash = Math.floor(cash);
-
 	        var total_dollars = 0;
 	        var rebalance = $scope.dollars !== $scope.previous_dollars;
+	        var total_percent = cash;
 
 	        portfolio_keys.forEach(function(elem) {
-	          d = $scope.portfolio_dollars[elem];
+	          d = parseFloat($scope.portfolio_dollars[elem]);
+	          p = parseFloat($scope.portfolio_percent[elem]);
 	          if (!d) {
-	            $scope.portfolio_dollars[elem] = Math.floor($scope.dollars/portfolio_keys.length);
+	            $scope.portfolio_dollars[elem] = Math.floor((1-cash/100)*$scope.dollars/portfolio_keys.length);
 	            $scope.previous_pd[elem] = Math.floor($scope.dollars/portfolio_keys.length);
+	            $scope.portfolio_percent[elem] = (100 - cash)/portfolio_keys.length;
 	          }
 	          else if (rebalance) {
 	            $scope.portfolio_dollars[elem] = Math.floor($scope.dollars*$scope.previous_pd[elem]/$scope.previous_dollars);
 	          }
-	          else if (isNaN(d)) {
+	          else if (isNaN(d) && !$scope.percent) {
 	            $timeout(function() {
 	              $scope.dollarError = true;
+	            });
+	            return;
+	          }
+	          else if (isNaN(p) && $scope.percent) {
+	            $timeout(function() {
+	              $scope.percentError = true;
 	            });
 	            return;
 	          }
@@ -42558,7 +42568,14 @@
 	            });
 	          }
 
-	          var dollars = Math.floor($scope.portfolio_dollars[elem]);
+	          var dollars = 0;
+	          if ($scope.percent) {
+	            total_percent += p;
+	            dollars = Math.floor($scope.dollars*p/100);
+	          }
+	          else {
+	            dollars = Math.floor($scope.portfolio_dollars[elem]);
+	          }
 	          total_dollars += dollars;
 
 	          var portfolio = {
@@ -42617,6 +42634,13 @@
 
 	        //display
 	        $timeout(function() {
+	          if ($scope.percent && Math.round(total_percent) !== 100) {
+	            $scope.percentError = true;
+	            return;
+	          }
+	          else {
+	            $scope.percentError = false;
+	          }
 	          $scope.portfolios = portfolios;
 	          $scope.dollars = Math.floor(100*total_dollars/(100-cash));
 	          $scope.previous_pd = $scope.portfolio_dollars;
