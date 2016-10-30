@@ -5,20 +5,70 @@
 
 <!--<select name="selectDate" id="selectDate" ng-change="updateDate(changeDate)" ng-model="changeDate" ng-options="key for key in dates">
 </select>-->
-<div class="form">
-  <form href="#">
-    <span class="dollar-input">
-      $
-      <input ng-model="dollars">
-      </input>
-    </div>
-  </form>
-  <button ng-click="listTable(table)" class="action-small">Update</button>
-</div>
+
+<table class="form">
+  <tr class="form-row">
+    <th class="form-head" ng-repeat="portfolio in portfolios track by $index" ng-bind="portfolio.title"></th>
+    <th class="form-head">Cash Percentage</th>
+    <th class="form-head">Total Investment</th>
+    <th class="form-head">
+      <button ng-click="percent = !percent" ng-show="percent" class="action-small">
+        Dollar
+      </button>
+      <button ng-click="percent = !percent" ng-show="!percent" class="action-small">
+        Percent
+      </button>
+    </th>
+  </tr>
+  <tr class="form-row">
+    <td class="form-cell" ng-show="!percent" ng-repeat="portfolio in portfolios track by $index">
+      <form href="#">
+        <span class="dollar-input">
+          $
+          <input ng-model="portfolio_dollars[portfolio.key]">
+          </input>
+        </div>
+      </form>
+    </td>
+    <td class="form-cell" ng-show="percent" ng-repeat="portfolio in portfolios track by $index">
+      <form href="#">
+        <span class="dollar-input">
+          <input ng-model="portfolio_percent[portfolio.key]">
+          </input>
+          %
+        </div>
+      </form>
+    </td>
+    <td class="form-cell">
+      <form href="#">
+        <span class="cash-input">
+          <input ng-model="cash">
+          </input>
+          %
+        </div>
+      </form>
+    </td>
+    <td class="form-cell">
+      <form href="#">
+        <span class="dollar-input">
+          $
+          <input ng-model="dollars">
+          </input>
+        </div>
+      </form>
+    </td>
+    <td class="form-cell">
+      <button ng-click="listTable(table)" class="action-small">Update</button>
+    </td>
+  </tr>
+</table>
 
 <br>
 <div class="dollar-error" ng-show="dollarError">
   That is not a valid dollar amount.
+</div>
+<div class="dollar-error" ng-show="percentError">
+  That is not a valid percentage.
 </div>
 
 <div ng-repeat="portfolio in portfolios track by $index">
