@@ -148,7 +148,7 @@ th {
 }
 
 .form-head {
-  padding: 5px 0px;
+  padding: 5px 3px;
   text-align: left;
 }
 
@@ -158,6 +158,7 @@ td {
 }
 
 .form-cell {
+  width: 8rem;
   padding: 0;
   text-align: left;
 }
@@ -180,8 +181,15 @@ td {
 
 .dollar-input input{
   border: 0;
-  /*background: #F45D30;*/
   color: #FF5050;
+  width: 6rem;
+  font-size: 100%;
+}
+
+.cash-input input {
+  border: 0;
+  color: #FF5050;
+  width: 2rem;
   font-size: 100%;
 }
 

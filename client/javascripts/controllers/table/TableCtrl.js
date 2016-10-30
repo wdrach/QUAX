@@ -41,6 +41,7 @@ module.exports = function(app) {
       $scope.portfolio_dollars = {};
       $scope.previous_pd = {};
       $scope.previous_dollars = "10000000";
+      $scope.cash = "5";
       $scope.dollarError = false;
 
       //round to N decimal points
@@ -69,7 +70,8 @@ module.exports = function(app) {
 
         var portfolios = [];
         var d = parseInt($scope.dollars);
-        if (isNaN(d)) {
+        var cash = parseInt($scope.cash);
+        if (isNaN(d) || isNaN(cash) || cash > 100) {
           $timeout(function() {
             $scope.dollarError = true;
           });
@@ -80,6 +82,8 @@ module.exports = function(app) {
             $scope.dollarError = false;
           });
         }
+
+        cash = Math.floor(cash);
 
         var total_dollars = 0;
         var rebalance = $scope.dollars !== $scope.previous_dollars;
@@ -165,7 +169,7 @@ module.exports = function(app) {
         //display
         $timeout(function() {
           $scope.portfolios = portfolios;
-          $scope.dollars = total_dollars;
+          $scope.dollars = Math.floor(100*total_dollars/(100-cash));
           $scope.previous_pd = $scope.portfolio_dollars;
           $scope.previous_dollars = $scope.dollars;
         });

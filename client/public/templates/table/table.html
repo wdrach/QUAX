@@ -8,25 +8,35 @@
 
 <table class="form">
   <tr class="form-row">
-    <th class="form-head">Total Investment</th>
     <th class="form-head" ng-repeat="portfolio in portfolios track by $index" ng-bind="portfolio.title"></th>
+    <th class="form-head">Cash Percentage</th>
+    <th class="form-head">Total Investment</th>
     <th class="form-head"></th>
   </tr>
   <tr class="form-row">
-    <td class="form-cell">
-      <form href="#">
-        <span class="dollar-input">
-          $
-          <input ng-model="dollars">
-          </input>
-        </div>
-      </form>
-    </td>
     <td class="form-cell" ng-repeat="portfolio in portfolios track by $index">
       <form href="#">
         <span class="dollar-input">
           $
           <input ng-model="portfolio_dollars[portfolio.key]">
+          </input>
+        </div>
+      </form>
+    </td>
+    <td class="form-cell">
+      <form href="#">
+        <span class="cash-input">
+          <input ng-model="cash">
+          </input>
+          %
+        </div>
+      </form>
+    </td>
+    <td class="form-cell">
+      <form href="#">
+        <span class="dollar-input">
+          $
+          <input ng-model="dollars">
           </input>
         </div>
       </form>
