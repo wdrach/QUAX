@@ -20,8 +20,8 @@ function calculateBeta(p) {
 };
 
 function balanceBetas(p) {
-  while (p.beta < -.4 || p.beta > .4) {
-    if (p.beta < -.4) {
+  while (p.beta < -.25 || p.beta > .25) {
+    if (p.beta < -.25) {
       var worst = -1;
       var worst_beta = 2;
       for (var sym in p.short) {
@@ -37,7 +37,7 @@ function balanceBetas(p) {
       }
       p.short[best].weight += .001;
     }
-    if (p.beta < -.4) {
+    if (p.beta < -.25) {
       var worst = -1;
       var worst_beta = -2;
       for (var sym in p.long) {
@@ -210,11 +210,11 @@ module.exports.getTable = (req, res) => {
     //to remove null values before sorting
     for (var entry in newTable) {
       var b = newTable[entry].beta;
-      if (newTable[entry].IV && b) IV.push(newTable[entry]);
-      if (newTable[entry].SENS && b) SENS.push(newTable[entry]);
-      if (newTable[entry].SENL && b) SENL.push(newTable[entry]);
-      if (newTable[entry].MFL && b) MFL.push(newTable[entry]);
-      if (newTable[entry].MFS && b) MFS.push(newTable[entry]);
+      if (newTable[entry].IV && b) IV.push(JSON.parse(JSON.stringify(newTable[entry])));
+      if (newTable[entry].SENS && b) SENS.push(JSON.parse(JSON.stringify(newTable[entry])));
+      if (newTable[entry].SENL && b) SENL.push(JSON.parse(JSON.stringify(newTable[entry])));
+      if (newTable[entry].MFL && b) MFL.push(JSON.parse(JSON.stringify(newTable[entry])));
+      if (newTable[entry].MFS && b) MFS.push(JSON.parse(JSON.stringify(newTable[entry])));
     }
 
     IV = IV.sort(function(a, b) {
