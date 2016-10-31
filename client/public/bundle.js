@@ -42468,7 +42468,7 @@
 
 	        //now for this last Monday
 	        //YYYYMMDD for any other date
-	        $scope.date = $scope.dates[0];
+	        $scope.date = $scope.dates[$scope.dates.length - 1];
 	        if ($stateParams.date) {
 	          $scope.date = $stateParams.date;
 	        }

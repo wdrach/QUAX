@@ -156,11 +156,10 @@ module.exports.getTable = (req, res) => {
         IV: entry['2nd PUT IVOL 25 Delta']/entry['2nd PUT IVOL 50 Delta'],
         IVS: entry['2nd PUT IVOL 25 Delta']/entry['2nd PUT IVOL 50 Delta'],
         IVL: entry['2nd PUT IVOL 25 Delta']/entry['2nd PUT IVOL 50 Delta'],
-        CDS: entry['5Y Mid Par CDS Sprd Ref Nm:D-1'],
-        CDSS: entry['5Y Mid Par CDS Sprd Ref Nm:D-1'],
-        CDSL: entry['5Y Mid Par CDS Sprd Ref Nm:D-1'],
         MFS: entry['Money Flow Total Weekly']/(entry['Money Flow Total Monthly'] - entry['Money Flow Total Weekly']),
         MFL: entry['Money Flow Block Monthly'],
+        SENS: entry['BEst Target Px:M-1']/entry.price,
+        SENL: entry['News Sent Dly Avg:D-2'],
         beta: entry['Beta:Y-3'],
         price: entry.price,
         sharpe: entry['Sharpe:M-1'],
@@ -190,19 +189,20 @@ module.exports.getTable = (req, res) => {
         _short_val: "MFS",
         _long_val: "MFL"
       },
-      CDS: {
+      SEN: {
         long: [],
         short: [],
-        _title: "CDS Spread",
-        _long_header: "5yr. CDS Spread",
-        _short_header: "5yr. CDS Spread",
-        _short_val: "CDSS",
-        _long_val: "CDSL"
+        _title: "Investor Sentiment",
+        _long_header: "Daily Sentiment Average",
+        _short_header: "Target Price Ratio",
+        _short_val: "SENS",
+        _long_val: "SENL"
       }
     };
 
     var IV = []
-      , CDS = []
+      , SENS = []
+      , SENL = []
       , MFL = []
       , MFS = [];
 
@@ -211,7 +211,8 @@ module.exports.getTable = (req, res) => {
     for (var entry in newTable) {
       var b = newTable[entry].beta;
       if (newTable[entry].IV && b) IV.push(newTable[entry]);
-      if (newTable[entry].CDS && b) CDS.push(newTable[entry]);
+      if (newTable[entry].SENS && b) SENS.push(newTable[entry]);
+      if (newTable[entry].SENL && b) SENL.push(newTable[entry]);
       if (newTable[entry].MFL && b) MFL.push(newTable[entry]);
       if (newTable[entry].MFS && b) MFS.push(newTable[entry]);
     }
@@ -219,8 +220,11 @@ module.exports.getTable = (req, res) => {
     IV = IV.sort(function(a, b) {
       return b.IV - a.IV;
     });
-    CDS = CDS.sort(function(a, b) {
-      return b.CDS - a.CDS;
+    SENS = SENS.sort(function(a, b) {
+      return b.SENS - a.SENS;
+    });
+    SENL = SENL.sort(function(a, b) {
+      return b.SENL - a.SENL;
     });
     MFL = MFL.sort(function(a, b) {
       return b.MFL - a.MFL;
@@ -231,8 +235,8 @@ module.exports.getTable = (req, res) => {
 
     out.IV.long = IV.splice(0, 15);
     out.IV.short = IV.splice(-15, 15).reverse();
-    out.CDS.long = CDS.splice(0, 15);
-    out.CDS.short = CDS.splice(-15, 15).reverse();
+    out.SEN.long = SENL.splice(0, 15);
+    out.SEN.short = SENS.splice(-15, 15).reverse();
     out.MF.long = MFL.splice(0, 10);
     out.MF.short = MFS.splice(-15, 15).reverse();
 
@@ -240,8 +244,8 @@ module.exports.getTable = (req, res) => {
     for (var key in out.IV.short) {
       out.IV.short[key].beta = -1*out.IV.short[key].beta;
     }
-    for (var key in out.CDS.short) {
-      out.CDS.short[key].beta = -1*out.CDS.short[key].beta;
+    for (var key in out.SEN.short) {
+      out.SEN.short[key].beta = -1*out.SEN.short[key].beta;
     }
     for (var key in out.MF.short) {
       out.MF.short[key].beta = -1*out.MF.short[key].beta;
@@ -259,14 +263,14 @@ module.exports.getTable = (req, res) => {
     out.IV = calculateBeta(out.IV);
     out.IV = balanceBetas(out.IV);
 
-    for (var i in out.CDS.short) {
-      out.CDS.short[i].weight = short_weight;
+    for (var i in out.SEN.short) {
+      out.SEN.short[i].weight = short_weight;
     }
-    for (var i in out.CDS.long) {
-      out.CDS.long[i].weight = long_weight;
+    for (var i in out.SEN.long) {
+      out.SEN.long[i].weight = long_weight;
     }
-    out.CDS = calculateBeta(out.CDS);
-    out.CDS = balanceBetas(out.CDS);
+    out.SEN = calculateBeta(out.SEN);
+    out.SEN = balanceBetas(out.SEN);
 
     long_weight = .1;
     for (var i in out.MF.short) {
