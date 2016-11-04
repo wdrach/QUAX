@@ -20,38 +20,48 @@ function calculateBeta(p) {
 };
 
 function balanceBetas(p) {
-  while (p.beta < -.25 || p.beta > .25) {
-    if (p.beta < -.25) {
+  while (p.beta < -.2 || p.beta > .2) {
+    if (p.beta < -.2) {
       var worst = -1;
+      var best = -1;
       var worst_beta = 2;
-      for (var sym in p.short) {
-        var b = p.short[sym].beta*p.short[sym].weight;
-        if (b < worst_beta && p.short[sym].weight >= .001) worst = sym;
-      }
-      p.short[worst].weight -= .001;
-      var best = -1;
       var best_beta = -2;
+
       for (var sym in p.short) {
         var b = p.short[sym].beta*p.short[sym].weight;
-        if (b > best_beta && p.short[sym].weight >= .001) best = sym;
+        if (b < worst_beta && p.short[sym].weight >= .001) {
+          worst = sym;
+          worst_beta = b;
+        }
+        if (b > best_beta && p.short[sym].weight >= .001) {
+          best = sym;
+          best_beta = b;
+        }
       }
+
       p.short[best].weight += .001;
+      p.short[worst].weight -= .001;
     }
-    if (p.beta < -.25) {
+    if (p.beta > .2) {
       var worst = -1;
-      var worst_beta = -2;
-      for (var sym in p.long) {
-        var b = p.long[sym].beta*p.long[sym].weight;
-        if (b > worst_beta && p.long[sym].weight >= .001) worst = sym;
-      }
-      p.long[worst].weight -= .001;
       var best = -1;
+      var worst_beta = -2;
       var best_beta = 2;
+
       for (var sym in p.long) {
         var b = p.long[sym].beta*p.long[sym].weight;
-        if (b < best_beta && p.long[sym].weight >= .001) best = sym;
+        if (b > worst_beta && p.long[sym].weight >= .001) {
+          worst = sym;
+          worst_beta = b;
+        }
+        if (b < best_beta && p.long[sym].weight >= .001) {
+          best = sym;
+          best_beta = b;
+        }
       }
+
       p.long[best].weight += .001;
+      p.long[worst].weight -= .001;
     }
     p = calculateBeta(p);
   }
