@@ -1,8 +1,16 @@
 var AWS = require('aws-sdk')
-  , parse = require('csv-parse');
+  , parse = require('csv-parse')
+  , fs = require('fs');
 
 var s3 = new AWS.S3()
   , bucket = 'quax';
+
+var beta_file = JSON.parse(fs.readFileSync(__dirname + '/../betas/Betas.json'));
+var betas = {};
+for (var n in beta_file) {
+  betas[beta_file[n].Ticker] = beta_file[n];
+}
+delete beta_file;
 
 function calculateBeta(p) {
   var beta = 0;
@@ -161,6 +169,8 @@ module.exports.getTable = (req, res) => {
     var newTable = {};
 
     table.forEach(function(entry) {
+      //ignore things not in universe
+      if (!betas[entry.symbol.replace('/','')]) return;
       //build entry, pretty straightforward
       var newEntry = {
         IV: entry['2nd PUT IVOL 25 Delta']/entry['2nd PUT IVOL 50 Delta'],
@@ -170,7 +180,7 @@ module.exports.getTable = (req, res) => {
         MFL: entry['Money Flow Block Monthly'],
         SENS: entry['BEst Target Px:M-1']/entry.price,
         SENL: entry['News Sent Dly Avg:D-2'],
-        beta: entry['Beta:Y-3'],
+        beta: betas[entry.symbol.replace('/','')].Beta,
         price: entry.price,
         sharpe: entry['Sharpe:M-1'],
         symbol: entry.symbol,
