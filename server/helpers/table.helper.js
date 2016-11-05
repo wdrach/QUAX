@@ -77,8 +77,8 @@ function balanceBetas(p) {
   return p;
 };
 
-module.exports.getTable = (date) => {
-  if (!date) return 400;
+module.exports.getTable = (date, cb) => {
+  if (!date) return cb(400);
 
   var bucketParams = {
     Bucket: 'quax',
@@ -88,9 +88,9 @@ module.exports.getTable = (date) => {
   //attempt to get the clean JSON
   s3.getObject(bucketParams, function(err, data) {
     //if there's an error, we probably don't have the clean JSON
-    if (err || !data) return cleanTable();
+    if (err || !data) return cb(cleanTable());
     var table = JSON.parse(data.Body.toString('utf8'));
-    return table;
+    cb(table);
   });
 
   function cleanTable() {
@@ -98,14 +98,14 @@ module.exports.getTable = (date) => {
     bucketParams.Key = 'dirty/' + date + '_Dirty.csv';
     s3.getObject(bucketParams, function(err, data) {
       //doesn't exist
-      if (err) return 404;
+      if (err) return cb(404);
 
       //get the string from the body
       var str = data.Body.toString('utf8');
 
       //use CSV parser to parse, windows style
       parse(str, {rowDelimiter: '\r\n'}, function(err, output) {
-        if (err) return 500;
+        if (err) return cb(500);
 
         var labels = output[2];
         var clean = [];
@@ -157,22 +157,22 @@ module.exports.getTable = (date) => {
         };
 
         s3.putObject(putParams, function(err, data) {
-          if (err) return 500;
+          if (err) return cb(500);
 
-          return clean;
+          cb(clean);
         });
       });
     });
   }
 }
 
-module.exports.getPortfolios = (date) => {
-  if (!date) return 400;
+module.exports.getPortfolios = (date, cb) => {
+  if (!date) return cb(400);
 
-  var table = getTable(date);
-  if (typeof(table) === 'number') return res.sendStatus(table);
-
-  sendTable(table);
+  module.exports.getTable(date, function(table) {
+    if (typeof(table) === 'number') return cb(res.sendStatus(table));
+    sendTable(table);
+  });
 
   function sendTable(table) {
     var newTable = {};
@@ -312,18 +312,18 @@ module.exports.getPortfolios = (date) => {
     out.MF = balanceBetas(out.MF);
 
     //:shipit:
-    return out;
+    cb(out);
   }
 };
 
-module.exports.getValidDates = function() {
+module.exports.getValidDates = function(cb) {
   var bucketParams = {
     Bucket: 'quax',
     Prefix: 'dirty'
   };
 
   s3.listObjects(bucketParams, function(err, data) {
-    if (err) return 500;
+    if (err) return cb(500);
     var ret = {
       dates: data.Contents.map(function(obj) {
         return obj.Key.replace('dirty/', '').substring(0, 8);
@@ -331,6 +331,6 @@ module.exports.getValidDates = function() {
     };
 
     ret.dates.shift();
-    return ret;
+    cb(ret);
   });
 };
