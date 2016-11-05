@@ -1,6 +1,7 @@
 var router = require('express').Router();
 var UserController = require('../controllers/user.controller');
 var TableController = require('../controllers/table.controller');
+var DeltaController = require('../controllers/delta.controller');
 
 module.exports = function(passport) {
   router.use(passport.authenticate('bearer'));
@@ -8,5 +9,7 @@ module.exports = function(passport) {
   router.route('/loggedIn').get(UserController.loggedIn);
   router.route('/table/date/:date').get(TableController.getTable);
   router.route('/table/getValidDates').get(TableController.getValidDates);
+  router.route('/delta/getValidDates').get(DeltaController.getValidDates);
+  router.route('/delta/date/:date').get(DeltaController.getCurrentQuantity);
   return router;
 }
