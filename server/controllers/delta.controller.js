@@ -2,6 +2,11 @@ var AWS = require('aws-sdk')
   , parse = require('csv-parse')
   , fs = require('fs');
 
+var helper = require('../helpers/table.helper');
+
+var getPortfolios = helper.getPortfolios
+  , getTable = helper.getTable;
+
 var s3 = new AWS.S3();
 
 module.exports.getCurrentQuantity = (req, res) => {
@@ -17,7 +22,7 @@ module.exports.getCurrentQuantity = (req, res) => {
     //if there's an error, we probably don't have the clean JSON
     if (err || !data) return cleanTable();
     var table = JSON.parse(data.Body.toString('utf8'));
-    return res.json(table);
+    runDelta(table);
   });
 
   function cleanTable() {
@@ -35,8 +40,8 @@ module.exports.getCurrentQuantity = (req, res) => {
         if (err) return res.sendStatus(500);
 
         var labels = output[0];
-        var longs = [];
-        var shorts = [];
+        var longs = {};
+        var shorts = {};
 
         output.forEach(function(elem, i) {
           //ignore the labels
@@ -53,10 +58,11 @@ module.exports.getCurrentQuantity = (req, res) => {
             }
           });
 
-          if (entry.quantity < 0) shorts.push(entry);
-          else longs.push(entry);
+          if (entry.quantity < 0) shorts[entry.symbol] = entry;
+          else longs[entry.symbol] = entry;
         });
 
+        var clean = {longs: longs, shorts: shorts};
         var buf = new Buffer(JSON.stringify(clean), 'utf-8');
         var putParams = {
           Bucket: 'quax',
@@ -67,11 +73,26 @@ module.exports.getCurrentQuantity = (req, res) => {
         s3.putObject(putParams, function(err, data) {
           if (err) return res.sendStatus(500);
 
-          return res.json(clean);
+          runDelta(clean);
         });
       });
     });
   }
+
+  function runDelta(cur) {
+    var used_symbols = [];
+    var deltas = {long: cur.long, short: cur.short};
+
+    //get full table
+    //Find current portfolio dollars in long and short
+    //distribute throughout the portfolios and find new quantities
+    //compute deltas
+    //add information to round out the table
+    //return!
+
+    getPortfolios(date, function(portfolios) {
+    });
+  };
 };
 
 module.exports.getValidDates = function(req, res) {
