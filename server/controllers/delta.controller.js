@@ -81,16 +81,35 @@ module.exports.getCurrentQuantity = (req, res) => {
 
   function runDelta(cur) {
     var used_symbols = [];
-    var deltas = {long: cur.long, short: cur.short};
+    var ret = {long: cur.long, short: cur.short};
 
-    //get full table
-    //Find current portfolio dollars in long and short
-    //distribute throughout the portfolios and find new quantities
-    //compute deltas
-    //add information to round out the table
-    //return!
+    getTable(date, function(table) {
+      if (typeof(table) === 'number') return res.sendStatus(table);
 
-    getPortfolios(date, function(portfolios) {
+      var prices = {};
+
+      table.forEach(function(elem) {
+        prices[elem.symbol] = {
+          symbol: elem.symbol,
+          price: elem.price
+        };
+      });
+
+      var long_dollars = 0;
+      for (var l in cur.long) {
+        long_dollars += cur.long[l].quantity*prices[cur.long[l].symbol];
+      }
+
+      var short_dollars = 0;
+      for (var s in cur.short) {
+        short_dollars += cur.short[s].quantity*prices[cur.short[s].symbol];
+      }
+
+      ret.dollars = (long_dollars - short_dollars)/2;
+      ret.short_dollars = short_dollars;
+      ret.long_dollars = long_dollars;
+
+      res.json(ret);
     });
   };
 };
