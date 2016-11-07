@@ -27,7 +27,7 @@ module.exports = function(app) {
 
         Backend.getTable($scope.date).then(function(data) {
           Backend.getCurrentQuantity().then(function(cur_data) {
-            $scope.table = data.data;
+            $scope.got_table = data.data;
             $scope.current = cur_data.data;
             listTable(data.data, cur_data.data);
           });
@@ -49,6 +49,7 @@ module.exports = function(app) {
       $scope.percent = 0;
       $scope.dollarError = false;
       $scope.percentError = false;
+      $scope.portfolios = {};
 
       //round to N decimal points
       $scope.accuracy = 3;
@@ -98,7 +99,7 @@ module.exports = function(app) {
           d = parseFloat($scope.portfolio_dollars[elem]);
           p = parseFloat($scope.portfolio_percent[elem]);
           if (!d || !$scope.portfolio_dollars[elem]) {
-            $scope.portfolio_dollars[elem] = Math.floor((1-cash/100)*cur_d/portfolio_keys.length);
+            $scope.portfolio_dollars[elem] = Math.floor(cur_d/portfolio_keys.length);
             $scope.previous_pd[elem] = Math.floor(cur_d/portfolio_keys.length);
             $scope.portfolio_percent[elem] = (100 - cash)/portfolio_keys.length;
           }
@@ -165,6 +166,11 @@ module.exports = function(app) {
             }
           });
 
+          portfolios.push({
+            title: givenTable[elem]['_title'],
+            key: elem
+          });
+
         });
 
         //display
@@ -176,10 +182,11 @@ module.exports = function(app) {
           else {
             $scope.percentError = false;
           }
-          $scope.table = table
+          $scope.table = table;
           $scope.dollars = Math.floor(100*total_dollars/(100-cash));
           $scope.previous_pd = $scope.portfolio_dollars;
           $scope.previous_dollars = $scope.dollars;
+          $scope.portfolios = portfolios;
         });
       }
 
