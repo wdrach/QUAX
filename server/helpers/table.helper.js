@@ -88,7 +88,7 @@ module.exports.getTable = (date, cb) => {
   //attempt to get the clean JSON
   s3.getObject(bucketParams, function(err, data) {
     //if there's an error, we probably don't have the clean JSON
-    if (err || !data) return cb(cleanTable());
+    if (err || !data) return cleanTable();
     var table = JSON.parse(data.Body.toString('utf8'));
     cb(table);
   });

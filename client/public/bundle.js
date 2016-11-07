@@ -112,6 +112,26 @@
 	        }
 	      });
 	    $stateProvider
+	      .state('delta', {
+	        url: '/delta',
+	        template: __webpack_require__(17),
+	        controller: 'DeltaCtrl',
+	        resolve: {
+	          'currentAuth': ['$q', '$rootScope', 'Backend', function($q, $rootScope, Backend) {
+	            var def = $q.defer();
+	            Backend.loggedIn().then(function() {
+	              $rootScope.loggedIn = true;
+	              def.resolve();
+	            }, function() {
+	              $rootScope.loggedIn = false;
+	              def.reject();
+	            });
+
+	            return def.promise;
+	          }]
+	        }
+	      });
+	    $stateProvider
 	      .state('table-date', {
 	        url: '/table/:date',
 	        template: __webpack_require__(16),
@@ -134,7 +154,7 @@
 	    $stateProvider
 	      .state('old-table', {
 	        url: '/old-table',
-	        template: __webpack_require__(17),
+	        template: __webpack_require__(18),
 	        controller: 'OldTableCtrl',
 	        resolve: {
 	          'currentAuth': ['$q', '$rootScope', 'Backend', function($q, $rootScope, Backend) {
@@ -154,7 +174,7 @@
 	    $stateProvider
 	      .state('old-table-date', {
 	        url: '/old-table/:date',
-	        template: __webpack_require__(17),
+	        template: __webpack_require__(18),
 	        controller: 'OldTableCtrl',
 	        resolve: {
 	          'currentAuth': ['$q', '$rootScope', 'Backend', function($q, $rootScope, Backend) {
@@ -183,8 +203,8 @@
 	  });
 	}]);
 
-	__webpack_require__(18)(app);
-	__webpack_require__(26)(app);
+	__webpack_require__(19)(app);
+	__webpack_require__(28)(app);
 
 
 /***/ },
@@ -42264,25 +42284,32 @@
 /* 17 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<!--<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>-->\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in topLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in topTable\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in botLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in bottomTable\">\n    <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
+	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<table class=\"form\">\n  <tr class=\"form-row\">\n    <th class=\"form-head\" ng-repeat=\"portfolio in portfolios track by $index\" ng-bind=\"portfolio.title\"></th>\n    <th class=\"form-head\">Cash Percentage</th>\n    <th class=\"form-head\">Total Investment</th>\n    <th class=\"form-head\">\n      <button ng-click=\"percent = !percent\" ng-show=\"percent\" class=\"action-small\">\n        Dollar\n      </button>\n      <button ng-click=\"percent = !percent\" ng-show=\"!percent\" class=\"action-small\">\n        Percent\n      </button>\n    </th>\n  </tr>\n  <tr class=\"form-row\">\n    <td class=\"form-cell\" ng-show=\"!percent\" ng-repeat=\"portfolio in portfolios track by $index\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          $\n          <input ng-model=\"portfolio_dollars[portfolio.key]\">\n          </input>\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\" ng-show=\"percent\" ng-repeat=\"portfolio in portfolios track by $index\">\n      <form href=\"#\">\n        <span class=\"percent-input\">\n          <input ng-model=\"portfolio_percent[portfolio.key]\">\n          </input>\n          %\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <span class=\"cash-input\">\n          <input ng-model=\"cash\">\n          </input>\n          %\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          $\n          <input ng-model=\"dollars\">\n          </input>\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <button ng-click=\"listTable(table, current)\" class=\"action-small\">Update</button>\n    </td>\n  </tr>\n</table>\n\n<br>\n<div class=\"dollar-error\" ng-show=\"dollarError\">\n  That is not a valid dollar amount.\n</div>\n<div class=\"dollar-error\" ng-show=\"percentError\">\n  That is not a valid percentage.\n</div>\n\n<h1 ng-bind=\"portfolio.title\"></h1>\n<table>\n  <tr>\n    <th>Symbol</th>\n    <th>Quantity</th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in table.long track by $index\">\n    <td class=\"top_cell\" ng-bind=\"symbol.symbol\"></td>\n    <td class=\"top_cell\" ng-bind=\"symbol.quantity\"></td>\n  </tr>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th>Symbol</th>\n    <th>Quantity</th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in table.short track by $index\">\n    <td class=\"bottom_cell\" ng-bind=\"symbol.symbol\"></td>\n    <td class=\"bottom_cell\" ng-bind=\"symbol.quantity\"></td>\n  </tr>\n</table>\n";
 
 /***/ },
 /* 18 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<!--<select name=\"selectDate\" id=\"selectDate\" ng-change=\"updateDate(changeDate)\" ng-model=\"changeDate\" ng-options=\"key for key in dates\">\n</select>-->\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in topLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in topTable\">\n    <td class=\"top_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th ng-repeat=\"label in botLabels\"> <a href=\"#\" ng-click=\"changeSort(label)\" ng-bind=\"label\"></a></th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in bottomTable\">\n    <td class=\"bottom_cell\" ng-repeat=\"entry in symbol track by $index\" ng-bind=\"entry\"></th>\n  </tr>\n</table>\n";
+
+/***/ },
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(app) {
-	  __webpack_require__(19)(app);
 	  __webpack_require__(20)(app);
 	  __webpack_require__(21)(app);
 	  __webpack_require__(22)(app);
 	  __webpack_require__(23)(app);
 	  __webpack_require__(24)(app);
 	  __webpack_require__(25)(app);
+	  __webpack_require__(26)(app);
+	  __webpack_require__(27)(app);
 	};
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42326,7 +42353,7 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42360,7 +42387,7 @@
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42386,7 +42413,7 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42409,7 +42436,7 @@
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42444,7 +42471,203 @@
 
 
 /***/ },
-/* 24 */
+/* 25 */
+/***/ function(module, exports) {
+
+	module.exports = function(app) {
+	  app.controller('DeltaCtrl', [
+	    '$filter',
+	    '$rootScope',
+	    '$sce',
+	    '$scope',
+	    '$state',
+	    '$stateParams',
+	    '$timeout',
+	    'Backend',
+	    function($filter, $rootScope, $sce, $scope, $state, $stateParams, $timeout, Backend) {
+	      if (!$rootScope.loggedIn) {
+	        console.error("not logged in");
+	        $state.go('root');
+	      }
+
+	      Backend.getValidDates().then(function(data) {
+	        $scope.dates = data.data.dates.sort();
+
+	        //now for this last Monday
+	        //YYYYMMDD for any other date
+	        $scope.date = $scope.dates[$scope.dates.length - 1];
+	        if ($stateParams.date) {
+	          $scope.date = $stateParams.date;
+	        }
+	        $scope.selectDate = $scope.date;
+
+	        Backend.getTable($scope.date).then(function(data) {
+	          Backend.getCurrentQuantity().then(function(cur_data) {
+	            $scope.table = data.data;
+	            $scope.current = cur_data.data;
+	            listTable(data.data, cur_data.data);
+	          });
+	        });
+	      });
+
+	      //base for no weights
+	      //test (only for date !== now) for equal equity in each metric
+	      //weight for weighing metrics
+	      $scope.mode = 'base';
+
+	      //number of dollars in our portfolio
+	      $scope.dollars = "10000000";
+	      $scope.portfolio_dollars = {};
+	      $scope.portfolio_percent = {};
+	      $scope.previous_pd = {};
+	      $scope.previous_dollars = "10000000";
+	      $scope.cash = "5";
+	      $scope.percent = 0;
+	      $scope.dollarError = false;
+	      $scope.percentError = false;
+
+	      //round to N decimal points
+	      $scope.accuracy = 3;
+
+	      function listTable(givenTable, current) {
+	        var portfolio_keys = [];
+	        for (var key in givenTable) {
+	          if (key[0] !== '_') {
+	            portfolio_keys.push(key);
+	          }
+	        };
+
+	        var portfolios = [];
+	        var cur_d = current.dollars;
+	        $scope.dollars = cur_d;
+	        var cash = parseFloat($scope.cash);
+	        if (isNaN(cash) || cash > 100) {
+	          $timeout(function() {
+	            $scope.dollarError = true;
+	          });
+	          return;
+	        }
+	        else {
+	          $timeout(function() {
+	            $scope.dollarError = false;
+	          });
+	        }
+
+	        var total_dollars = 0;
+	        var rebalance = $scope.dollars !== $scope.previous_dollars;
+	        var total_percent = cash;
+
+	        var table = {
+	          long: current.long,
+	          short: current.short
+	        };
+
+	        //flip quantity to buy for currently owned stocks
+	        for (var l in table.long) {
+	          table.long[l].quantity = -1*table.long[l].quantity;
+	        }
+	        for (var s in table.short) {
+	          table.short[s].quantity = -1*table.short[s].quantity;
+	        }
+
+	        portfolio_keys.forEach(function(elem) {
+	          d = parseFloat($scope.portfolio_dollars[elem]);
+	          p = parseFloat($scope.portfolio_percent[elem]);
+	          if (!d || !$scope.portfolio_dollars[elem]) {
+	            $scope.portfolio_dollars[elem] = Math.floor((1-cash/100)*cur_d/portfolio_keys.length);
+	            $scope.previous_pd[elem] = Math.floor(cur_d/portfolio_keys.length);
+	            $scope.portfolio_percent[elem] = (100 - cash)/portfolio_keys.length;
+	          }
+	          else if (rebalance) {
+	            $scope.portfolio_dollars[elem] = Math.floor(d*$scope.previous_pd[elem]/$scope.previous_dollars);
+	          }
+	          else if (isNaN(d) && !$scope.percent) {
+	            $timeout(function() {
+	              $scope.dollarError = true;
+	            });
+	            return;
+	          }
+	          else if (isNaN(p) && $scope.percent) {
+	            $timeout(function() {
+	              $scope.percentError = true;
+	            });
+	            return;
+	          }
+	          else {
+	            $timeout(function() {
+	              $scope.dollarError = false;
+	            });
+	          }
+
+	          var dollars = 0;
+	          if ($scope.percent) {
+	            total_percent += p;
+	            dollars = Math.floor(d*p/100);
+	          }
+	          else {
+	            dollars = Math.floor($scope.portfolio_dollars[elem]);
+	          }
+	          total_dollars += dollars;
+
+	          //construct long portfolio
+	          givenTable[elem].long.forEach(function(el) {
+	            var sym = el.symbol
+	              , amount = Math.floor(el.weight*dollars/el.price);
+
+	            if (table.long[sym]) {
+	              table.long[sym].quantity += amount;
+	            }
+	            else {
+	              table.long[sym] = {
+	                symbol: sym,
+	                quantity: amount
+	              };
+	            }
+	          });
+
+	          //same for short
+	          givenTable[elem].short.forEach(function(el) {
+	            var sym = el.symbol
+	              , amount = Math.floor(el.weight*dollars/el.price);
+
+	            if (table.short[sym]) {
+	              table.short[sym].quantity += amount;
+	            }
+	            else {
+	              table.short[sym] = {
+	                symbol: sym,
+	                quantity: amount
+	              };
+	            }
+	          });
+
+	        });
+
+	        //display
+	        $timeout(function() {
+	          if ($scope.percent && Math.round(total_percent) !== 100) {
+	            $scope.percentError = true;
+	            return;
+	          }
+	          else {
+	            $scope.percentError = false;
+	          }
+	          $scope.table = table
+	          $scope.dollars = Math.floor(100*total_dollars/(100-cash));
+	          $scope.previous_pd = $scope.portfolio_dollars;
+	          $scope.previous_dollars = $scope.dollars;
+	        });
+	      }
+
+	      $scope.listTable = listTable;
+
+	    }
+	  ]);
+	};
+
+
+/***/ },
+/* 26 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42664,7 +42887,7 @@
 
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42833,18 +43056,18 @@
 
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(app) {
-	  __webpack_require__(27)(app);
-	  __webpack_require__(28)(app);
 	  __webpack_require__(29)(app);
+	  __webpack_require__(30)(app);
+	  __webpack_require__(31)(app);
 	};
 
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {
@@ -42898,7 +43121,7 @@
 
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports) {
 
 	module.exports = function (app) {
@@ -42977,13 +43200,17 @@
 	      return get('/api/table/getValidDates');
 	    };
 
+	    Backend.getCurrentQuantity = function () {
+	      return get('/api/current');
+	    };
+
 	    return Backend;
 	  });
 	};
 
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports) {
 
 	module.exports = function(app) {

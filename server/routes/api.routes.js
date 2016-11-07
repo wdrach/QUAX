@@ -9,7 +9,6 @@ module.exports = function(passport) {
   router.route('/loggedIn').get(UserController.loggedIn);
   router.route('/table/date/:date').get(TableController.getTable);
   router.route('/table/getValidDates').get(TableController.getValidDates);
-  router.route('/delta/getValidDates').get(DeltaController.getValidDates);
-  router.route('/delta/date/:date').get(DeltaController.getCurrentQuantity);
+  router.route('/current').get(DeltaController.getCurrentQuantity);
   return router;
 }

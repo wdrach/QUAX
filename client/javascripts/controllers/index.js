@@ -4,6 +4,7 @@ module.exports = function(app) {
   require('./app/RootCtrl.js')(app);
   require('./app/LoginCallbackCtrl.js')(app);
   require('./app/ModalCtrl.js')(app);
+  require('./table/DeltaCtrl.js')(app);
   require('./table/TableCtrl.js')(app);
   require('./table/OldTableCtrl.js')(app);
 };
