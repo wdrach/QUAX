@@ -6,6 +6,8 @@
 <!--<select name="selectDate" id="selectDate" ng-change="updateDate(changeDate)" ng-model="changeDate" ng-options="key for key in dates">
 </select>-->
 
+<button ng-click="$state.go('delta')" class="action-small">Delta View</button>
+
 <table class="form">
   <tr class="form-row">
     <th class="form-head" ng-repeat="portfolio in portfolios track by $index" ng-bind="portfolio.title"></th>
