@@ -66,6 +66,26 @@ app.config(function($urlRouterProvider, $stateProvider, $httpProvider, $anchorSc
         }
       });
     $stateProvider
+      .state('delta', {
+        url: '/delta',
+        template: require('../public/templates/table/delta.html'),
+        controller: 'DeltaCtrl',
+        resolve: {
+          'currentAuth': ['$q', '$rootScope', 'Backend', function($q, $rootScope, Backend) {
+            var def = $q.defer();
+            Backend.loggedIn().then(function() {
+              $rootScope.loggedIn = true;
+              def.resolve();
+            }, function() {
+              $rootScope.loggedIn = false;
+              def.reject();
+            });
+
+            return def.promise;
+          }]
+        }
+      });
+    $stateProvider
       .state('table-date', {
         url: '/table/:date',
         template: require('../public/templates/table/table.html'),

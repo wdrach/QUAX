@@ -74,6 +74,10 @@ module.exports = function (app) {
       return get('/api/table/getValidDates');
     };
 
+    Backend.getCurrentQuantity = function () {
+      return get('/api/current');
+    };
+
     return Backend;
   });
 };

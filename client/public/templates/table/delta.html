@@ -3,10 +3,11 @@
 </div>
 <h1 class="logo--center">QUAX</h1>
 
-<!--<select name="selectDate" id="selectDate" ng-change="updateDate(changeDate)" ng-model="changeDate" ng-options="key for key in dates">
-</select>-->
+<button ng-click="$state.go('table')" class="action-small">Table View</button>
 
-<button ng-click="$state.go('delta')" class="action-small">Delta View</button>
+<div class="dollar-error">
+  This page is under construction. I would not recommend trading based on this.
+</div>
 
 <table class="form">
   <tr class="form-row">
@@ -60,7 +61,7 @@
       </form>
     </td>
     <td class="form-cell">
-      <button ng-click="listTable(table)" class="action-small">Update</button>
+      <button ng-click="listTable(got_table, current)" class="action-small">Update</button>
     </td>
   </tr>
 </table>
@@ -73,24 +74,26 @@
   That is not a valid percentage.
 </div>
 
-<div ng-repeat="portfolio in portfolios track by $index">
 <h1 ng-bind="portfolio.title"></h1>
-<h4>Beta: {{portfolio.beta}}</h4>
-  <table>
-    <tr>
-      <th ng-repeat="label in portfolio.long.labels track by $index" ng-bind="label"></th>
-    </tr>
-    <tr class="top_row" ng-repeat="symbol in portfolio.long.cells track by $index">
-      <td class="top_cell" ng-repeat="entry in symbol track by $index" ng-bind="entry"></th>
-    </tr>
-  </table>
+<table>
+  <tr>
+    <th>Symbol</th>
+    <th>Quantity</th>
+  </tr>
+  <tr class="top_row" ng-repeat="symbol in table.long track by $index">
+    <td class="top_cell" ng-bind="symbol.symbol"></td>
+    <td class="top_cell" ng-bind="symbol.quantity"></td>
+  </tr>
+  </tr>
+</table>
 
-  <table>
-    <tr>
-      <th ng-repeat="label in portfolio.short.labels track by $index" ng-bind="label"></th>
-    </tr>
-    <tr class="bottom_row" ng-repeat="symbol in portfolio.short.cells track by $index">
-      <td class="bottom_cell" ng-repeat="entry in symbol track by $index" ng-bind="entry"></th>
-    </tr>
-  </table>
-</div>
+<table>
+  <tr>
+    <th>Symbol</th>
+    <th>Quantity</th>
+  </tr>
+  <tr class="bottom_row" ng-repeat="symbol in table.short track by $index">
+    <td class="bottom_cell" ng-bind="symbol.symbol"></td>
+    <td class="bottom_cell" ng-bind="symbol.quantity"></td>
+  </tr>
+</table>
