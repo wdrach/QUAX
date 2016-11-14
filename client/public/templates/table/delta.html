@@ -5,10 +5,6 @@
 
 <button ng-click="$state.go('table')" class="action-small">Table View</button>
 
-<div class="dollar-error">
-  This page is under construction. I would not recommend trading based on this.
-</div>
-
 <table class="form">
   <tr class="form-row">
     <th class="form-head" ng-repeat="portfolio in portfolios track by $index" ng-bind="portfolio.title"></th>
