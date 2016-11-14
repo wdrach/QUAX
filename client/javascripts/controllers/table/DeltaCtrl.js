@@ -183,7 +183,7 @@ module.exports = function(app) {
             $scope.percentError = false;
           }
           $scope.table = table;
-          $scope.dollars = Math.floor(100*total_dollars/(100-cash));
+          $scope.dollars = Math.floor(100*total_dollars/(100-2*cash));
           $scope.previous_pd = $scope.portfolio_dollars;
           $scope.previous_dollars = $scope.dollars;
           $scope.portfolios = portfolios;
