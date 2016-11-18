@@ -27,8 +27,8 @@ module.exports = function(app) {
 
         Backend.getTable($scope.date).then(function(data) {
           Backend.getCurrentQuantity().then(function(cur_data) {
-            $scope.got_table = data.data;
-            $scope.current = cur_data.data;
+            $scope.got_table = JSON.parse(JSON.stringify(data.data));
+            $scope.current = JSON.parse(JSON.stringify(cur_data.data));
             listTable(data.data, cur_data.data);
           });
         });
@@ -183,9 +183,9 @@ module.exports = function(app) {
             $scope.percentError = false;
           }
           $scope.table = table;
-          $scope.dollars = Math.floor(100*total_dollars/(100-2*cash));
-          $scope.previous_pd = $scope.portfolio_dollars;
           $scope.previous_dollars = $scope.dollars;
+          $scope.previous_pd = $scope.portfolio_dollars;
+          $scope.dollars = Math.floor(100*total_dollars/(100-2*cash));
           $scope.portfolios = portfolios;
         });
       }
