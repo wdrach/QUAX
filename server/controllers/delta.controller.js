@@ -123,6 +123,7 @@ module.exports.getCurrentQuantity = (req, res) => {
 
         var long_dollars = 0;
         for (var l in cur.long) {
+          if (prices[cur.long[l].symbol] == undefined) continue;
           long_dollars += cur.long[l].quantity*prices[cur.long[l].symbol];
           cur.long[l].price = prices[cur.long[l].symbol];
         }
@@ -130,6 +131,7 @@ module.exports.getCurrentQuantity = (req, res) => {
 
         var short_dollars = 0;
         for (var s in cur.short) {
+          if (prices[cur.short[s].symbol] == undefined) continue;
           short_dollars += cur.short[s].quantity*prices[cur.short[s].symbol];
           cur.short[s].price = prices[cur.short[s].symbol];
         }
