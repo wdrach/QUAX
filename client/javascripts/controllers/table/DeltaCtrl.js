@@ -29,7 +29,10 @@ module.exports = function(app) {
           Backend.getCurrentQuantity().then(function(cur_data) {
             $scope.got_table = JSON.parse(JSON.stringify(data.data));
             $scope.current = JSON.parse(JSON.stringify(cur_data.data));
-            listTable(data.data, cur_data.data);
+            getCurrentPortfolios($scope.current, function(cur_port) {
+              $scope.current_portfolios = JSON.parse(JSON.stringify(cur_port));
+              listTable(data.data, cur_data.data, cur_port);
+            });
           });
         });
       });
@@ -44,6 +47,7 @@ module.exports = function(app) {
       $scope.portfolio_dollars = {};
       $scope.portfolio_percent = {};
       $scope.previous_pd = {};
+      $scope.current_portfolios = {};
       $scope.cash = "5";
       $scope.percent = false;
       $scope.dollarError = false;
@@ -53,7 +57,79 @@ module.exports = function(app) {
       //round to N decimal points
       $scope.accuracy = 3;
 
-      function listTable(givenTable, current) {
+      function getCurrentPortfolios(current, cb) {
+        var date = current.date;
+        Backend.getTable(date).then(function(data) {
+          var table = data.data;
+          var cur_port = {
+            long: {},
+            short: {}
+          };
+          var portfolio_keys = [];
+          for (var key in table) {
+            if (key[0] !== '_') {
+              portfolio_keys.push(key);
+            }
+          };
+
+          //init empty objects for all symbols
+          for (var elem in current.long) {
+            cur_port.long[elem] = {};
+          }
+          for (var elem in current.short) {
+            cur_port.short[elem] = {};
+          }
+
+          portfolio_keys.forEach(function(key) {
+            var longs = {};
+            var shorts = {};
+            table[key].long.forEach(function(i, ind) {
+              longs[i.symbol] = ind;
+            });
+            table[key].short.forEach(function(i, ind) {
+              shorts[i.symbol] = ind;
+            });
+
+            for (var elem in current.long) {
+              cur_port.long[elem][key] = 0;
+              if (longs[elem] !== undefined) {
+                cur_port.long[elem][key] = table[key].long[longs[elem]].weight;
+              }
+            }
+            for (var elem in current.short) {
+              cur_port.short[elem][key] = 0;
+              if (shorts[elem] !== undefined) {
+                cur_port.short[elem][key] = table[key].short[shorts[elem]].weight;
+              }
+            }
+          });
+
+          //normalize each of the current portfolios
+          for (var key in cur_port.short) {
+            var total = 0;
+            for (var port in cur_port.short[key]) {
+              total += cur_port.short[key][port];
+            }
+            for (var port in cur_port.short[key]) {
+              cur_port.short[key][port] = cur_port.short[key][port]/total;
+            }
+          }
+
+          for (var key in cur_port.long) {
+            var total = 0;
+            for (var port in cur_port.long[key]) {
+              total += cur_port.long[key][port];
+            }
+            for (var port in cur_port.long[key]) {
+              cur_port.long[key][port] = cur_port.long[key][port]/total;
+            }
+          }
+
+          cb(cur_port);
+        });
+      }
+
+      function listTable(givenTable, current, cur_ports) {
         var portfolio_keys = [];
         for (var key in givenTable) {
           if (key[0] !== '_') {
@@ -63,7 +139,7 @@ module.exports = function(app) {
 
         var portfolios = [];
         var cur_d = current.dollars;
-        $scope.dollars = cur_d;
+        $scope.dollars = Math.floor(cur_d);
         var cash = parseFloat($scope.cash);
         if (isNaN(cash) || cash > 100) {
           $timeout(function() {
@@ -123,7 +199,7 @@ module.exports = function(app) {
           var dollars = 0;
           if ($scope.percent) {
             total_percent += p;
-            dollars = Math.floor(cur_d*p/100);
+            dollars = Math.floor(cur_d*p/(100-cash));
           }
           else {
             dollars = Math.floor($scope.portfolio_dollars[elem]);

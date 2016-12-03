@@ -61,13 +61,14 @@ module.exports.getCurrentQuantity = (req, res) => {
       parse(str, {rowDelimiter: '\r\n'}, function(err, output) {
         if (err) return res.sendStatus(500);
 
-        var labels = output[0];
+        var labels = output[1];
         var longs = {};
         var shorts = {};
+        var date = output[0][1];
 
         output.forEach(function(elem, i) {
-          //ignore the labels
-          if (i <= 1) return;
+          //ignore the labels and date
+          if (i <= 2) return;
 
           var entry = {};
 
@@ -87,7 +88,7 @@ module.exports.getCurrentQuantity = (req, res) => {
           else longs[entry.symbol] = entry;
         });
 
-        var clean = {long: longs, short: shorts};
+        var clean = {long: longs, short: shorts, date: date};
         var buf = new Buffer(JSON.stringify(clean), 'utf-8');
         var putParams = {
           Bucket: 'quax',
@@ -107,7 +108,7 @@ module.exports.getCurrentQuantity = (req, res) => {
 
   function runDelta(cur) {
     var used_symbols = [];
-    var ret = {long: cur.long, short: cur.short};
+    var ret = {long: cur.long, short: cur.short, date: cur.date};
 
     getValidDates(function(dates) {
       if (typeof(dates) === 'number') return res.sendStatus(dates);
