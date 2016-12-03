@@ -51,13 +51,13 @@
       <form href="#">
         <span class="dollar-input">
           $
-          <input ng-model="dollars">
+          <input ng-model="dollars" readonly>
           </input>
         </div>
       </form>
     </td>
     <td class="form-cell">
-      <button ng-click="listTable(got_table, current)" class="action-small">Update</button>
+      <button ng-click="listTable(got_table, current, current_portfolios)" class="action-small">Update</button>
     </td>
   </tr>
 </table>
@@ -69,6 +69,32 @@
 <div class="dollar-error" ng-show="percentError">
   That is not a valid percentage.
 </div>
+
+<table class="form">
+  <tr class="form-row">
+    <th class="form-head">Portfolio</th>
+    <th class="form-head">Rebalance Longs</th>
+    <th class="form-head">Rebalance Shorts</th>
+    <th class="form-head">
+      <button ng-click="listTable(got_table, current, current_portfolios)" class="action-small">Update</button>
+    </th>
+  </tr>
+  <tr class="form-row" ng-repeat="portfolio in portfolios track by $index">
+    <td class="form-cell" ng-bind="portfolio.title"></td>
+    <td class="form-cell">
+      <form href="#">
+        <input type="checkbox" ng-model="rebalance[portfolio.key].long">
+        </input>
+      </form>
+    </td>
+    <td class="form-cell">
+      <form href="#">
+        <input type="checkbox" ng-model="rebalance[portfolio.key].short">
+        </input>
+      </form>
+    </td>
+  </tr>
+</table>
 
 <h1 ng-bind="portfolio.title"></h1>
 <table>

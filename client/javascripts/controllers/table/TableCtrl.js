@@ -9,17 +9,22 @@ module.exports = function(app) {
     '$timeout',
     'Backend',
     function($filter, $rootScope, $sce, $scope, $state, $stateParams, $timeout, Backend) {
+
+      //back out if not logged in
       if (!$rootScope.loggedIn) {
         console.error("not logged in");
         $state.go('root');
       }
 
+
+      //get the valid dates for the full table
       Backend.getValidDates().then(function(data) {
+        //sort alphabetically, which in this case also sorts numerically
         $scope.dates = data.data.dates.sort();
 
-        //now for this last Monday
-        //YYYYMMDD for any other date
+        //pick the most recent date
         $scope.date = $scope.dates[$scope.dates.length - 1];
+        //use the path date if you want
         if ($stateParams.date) {
           $scope.date = $stateParams.date;
         }
@@ -54,9 +59,6 @@ module.exports = function(app) {
       $scope.sortBy = 'Symbol';
       //Ascending/Descending
       $scope.ascending = true;
-
-      //how many values to have in the top/bottom tables
-      $scope.N = 15;
 
       var labels = ['Symbol', 'Price', 'Beta', '1 Mo. Sharpe'];
 
