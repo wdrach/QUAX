@@ -44,9 +44,8 @@ module.exports = function(app) {
       $scope.portfolio_dollars = {};
       $scope.portfolio_percent = {};
       $scope.previous_pd = {};
-      $scope.previous_dollars = "10000000";
       $scope.cash = "5";
-      $scope.percent = 0;
+      $scope.percent = false;
       $scope.dollarError = false;
       $scope.percentError = false;
       $scope.portfolios = {};
@@ -79,12 +78,12 @@ module.exports = function(app) {
         }
 
         var total_dollars = 0;
-        var rebalance = $scope.dollars !== $scope.previous_dollars;
+
         var total_percent = cash;
 
         var table = {
-          long: current.long,
-          short: current.short
+          long: JSON.parse(JSON.stringify(current.long)),
+          short: JSON.parse(JSON.stringify(current.short))
         };
 
         //flip quantity to buy for currently owned stocks
@@ -102,9 +101,6 @@ module.exports = function(app) {
             $scope.portfolio_dollars[elem] = Math.floor(cur_d/portfolio_keys.length);
             $scope.previous_pd[elem] = Math.floor(cur_d/portfolio_keys.length);
             $scope.portfolio_percent[elem] = (100 - cash)/portfolio_keys.length;
-          }
-          else if (rebalance) {
-            $scope.portfolio_dollars[elem] = Math.floor(d*$scope.previous_pd[elem]/$scope.previous_dollars);
           }
           else if (isNaN(d) && !$scope.percent) {
             $timeout(function() {
@@ -127,7 +123,7 @@ module.exports = function(app) {
           var dollars = 0;
           if ($scope.percent) {
             total_percent += p;
-            dollars = Math.floor(d*p/100);
+            dollars = Math.floor(cur_d*p/100);
           }
           else {
             dollars = Math.floor($scope.portfolio_dollars[elem]);
@@ -183,9 +179,7 @@ module.exports = function(app) {
             $scope.percentError = false;
           }
           $scope.table = table;
-          $scope.previous_dollars = $scope.dollars;
           $scope.previous_pd = $scope.portfolio_dollars;
-          $scope.dollars = Math.floor(100*total_dollars/(100-2*cash));
           $scope.portfolios = portfolios;
         });
       }

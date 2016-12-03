@@ -42284,7 +42284,7 @@
 /* 17 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<button ng-click=\"$state.go('table')\" class=\"action-small\">Table View</button>\n\n<table class=\"form\">\n  <tr class=\"form-row\">\n    <th class=\"form-head\" ng-repeat=\"portfolio in portfolios track by $index\" ng-bind=\"portfolio.title\"></th>\n    <th class=\"form-head\">Cash Percentage</th>\n    <th class=\"form-head\">Total Investment</th>\n    <th class=\"form-head\">\n      <button ng-click=\"percent = !percent\" ng-show=\"percent\" class=\"action-small\">\n        Dollar\n      </button>\n      <button ng-click=\"percent = !percent\" ng-show=\"!percent\" class=\"action-small\">\n        Percent\n      </button>\n    </th>\n  </tr>\n  <tr class=\"form-row\">\n    <td class=\"form-cell\" ng-show=\"!percent\" ng-repeat=\"portfolio in portfolios track by $index\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          $\n          <input ng-model=\"portfolio_dollars[portfolio.key]\">\n          </input>\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\" ng-show=\"percent\" ng-repeat=\"portfolio in portfolios track by $index\">\n      <form href=\"#\">\n        <span class=\"percent-input\">\n          <input ng-model=\"portfolio_percent[portfolio.key]\">\n          </input>\n          %\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <span class=\"cash-input\">\n          <input ng-model=\"cash\">\n          </input>\n          %\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          $\n          <input ng-model=\"dollars\">\n          </input>\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <button ng-click=\"listTable(got_table, current)\" class=\"action-small\">Update</button>\n    </td>\n  </tr>\n</table>\n\n<br>\n<div class=\"dollar-error\" ng-show=\"dollarError\">\n  That is not a valid dollar amount.\n</div>\n<div class=\"dollar-error\" ng-show=\"percentError\">\n  That is not a valid percentage.\n</div>\n\n<h1 ng-bind=\"portfolio.title\"></h1>\n<table>\n  <tr>\n    <th>Symbol</th>\n    <th>Quantity</th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in table.long track by $index\">\n    <td class=\"top_cell\" ng-bind=\"symbol.symbol\"></td>\n    <td class=\"top_cell\" ng-bind=\"symbol.quantity\"></td>\n  </tr>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th>Symbol</th>\n    <th>Quantity</th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in table.short track by $index\">\n    <td class=\"bottom_cell\" ng-bind=\"symbol.symbol\"></td>\n    <td class=\"bottom_cell\" ng-bind=\"symbol.quantity\"></td>\n  </tr>\n</table>\n";
+	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<button ng-click=\"$state.go('table')\" class=\"action-small\">Table View</button>\n\n<table class=\"form\">\n  <tr class=\"form-row\">\n    <th class=\"form-head\" ng-repeat=\"portfolio in portfolios track by $index\" ng-bind=\"portfolio.title\"></th>\n    <th class=\"form-head\">Cash Percentage</th>\n    <th class=\"form-head\">Total Investment</th>\n    <th class=\"form-head\">\n      <button ng-click=\"percent = !percent\" ng-show=\"percent\" class=\"action-small\">\n        Dollar\n      </button>\n      <button ng-click=\"percent = !percent\" ng-show=\"!percent\" class=\"action-small\">\n        Percent\n      </button>\n    </th>\n  </tr>\n  <tr class=\"form-row\">\n    <td class=\"form-cell\" ng-show=\"!percent\" ng-repeat=\"portfolio in portfolios track by $index\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          $\n          <input ng-model=\"portfolio_dollars[portfolio.key]\">\n          </input>\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\" ng-show=\"percent\" ng-repeat=\"portfolio in portfolios track by $index\">\n      <form href=\"#\">\n        <span class=\"percent-input\">\n          <input ng-model=\"portfolio_percent[portfolio.key]\">\n          </input>\n          %\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <span class=\"cash-input\">\n          <input ng-model=\"cash\">\n          </input>\n          %\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          $\n          <input ng-model=\"dollars\" readonly>\n          </input>\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <button ng-click=\"listTable(got_table, current)\" class=\"action-small\">Update</button>\n    </td>\n  </tr>\n</table>\n\n<br>\n<div class=\"dollar-error\" ng-show=\"dollarError\">\n  That is not a valid dollar amount.\n</div>\n<div class=\"dollar-error\" ng-show=\"percentError\">\n  That is not a valid percentage.\n</div>\n\n<h1 ng-bind=\"portfolio.title\"></h1>\n<table>\n  <tr>\n    <th>Symbol</th>\n    <th>Quantity</th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in table.long track by $index\">\n    <td class=\"top_cell\" ng-bind=\"symbol.symbol\"></td>\n    <td class=\"top_cell\" ng-bind=\"symbol.quantity\"></td>\n  </tr>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th>Symbol</th>\n    <th>Quantity</th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in table.short track by $index\">\n    <td class=\"bottom_cell\" ng-bind=\"symbol.symbol\"></td>\n    <td class=\"bottom_cell\" ng-bind=\"symbol.quantity\"></td>\n  </tr>\n</table>\n";
 
 /***/ },
 /* 18 */
@@ -42520,9 +42520,8 @@
 	      $scope.portfolio_dollars = {};
 	      $scope.portfolio_percent = {};
 	      $scope.previous_pd = {};
-	      $scope.previous_dollars = "10000000";
 	      $scope.cash = "5";
-	      $scope.percent = 0;
+	      $scope.percent = false;
 	      $scope.dollarError = false;
 	      $scope.percentError = false;
 	      $scope.portfolios = {};
@@ -42555,12 +42554,12 @@
 	        }
 
 	        var total_dollars = 0;
-	        var rebalance = $scope.dollars !== $scope.previous_dollars;
+
 	        var total_percent = cash;
 
 	        var table = {
-	          long: current.long,
-	          short: current.short
+	          long: JSON.parse(JSON.stringify(current.long)),
+	          short: JSON.parse(JSON.stringify(current.short))
 	        };
 
 	        //flip quantity to buy for currently owned stocks
@@ -42578,9 +42577,6 @@
 	            $scope.portfolio_dollars[elem] = Math.floor(cur_d/portfolio_keys.length);
 	            $scope.previous_pd[elem] = Math.floor(cur_d/portfolio_keys.length);
 	            $scope.portfolio_percent[elem] = (100 - cash)/portfolio_keys.length;
-	          }
-	          else if (rebalance) {
-	            $scope.portfolio_dollars[elem] = Math.floor(d*$scope.previous_pd[elem]/$scope.previous_dollars);
 	          }
 	          else if (isNaN(d) && !$scope.percent) {
 	            $timeout(function() {
@@ -42603,7 +42599,7 @@
 	          var dollars = 0;
 	          if ($scope.percent) {
 	            total_percent += p;
-	            dollars = Math.floor(d*p/100);
+	            dollars = Math.floor(cur_d*p/100);
 	          }
 	          else {
 	            dollars = Math.floor($scope.portfolio_dollars[elem]);
@@ -42659,9 +42655,7 @@
 	            $scope.percentError = false;
 	          }
 	          $scope.table = table;
-	          $scope.previous_dollars = $scope.dollars;
 	          $scope.previous_pd = $scope.portfolio_dollars;
-	          $scope.dollars = Math.floor(100*total_dollars/(100-2*cash));
 	          $scope.portfolios = portfolios;
 	        });
 	      }
@@ -42688,17 +42682,22 @@
 	    '$timeout',
 	    'Backend',
 	    function($filter, $rootScope, $sce, $scope, $state, $stateParams, $timeout, Backend) {
+
+	      //back out if not logged in
 	      if (!$rootScope.loggedIn) {
 	        console.error("not logged in");
 	        $state.go('root');
 	      }
 
+
+	      //get the valid dates for the full table
 	      Backend.getValidDates().then(function(data) {
+	        //sort alphabetically, which in this case also sorts numerically
 	        $scope.dates = data.data.dates.sort();
 
-	        //now for this last Monday
-	        //YYYYMMDD for any other date
+	        //pick the most recent date
 	        $scope.date = $scope.dates[$scope.dates.length - 1];
+	        //use the path date if you want
 	        if ($stateParams.date) {
 	          $scope.date = $stateParams.date;
 	        }
@@ -42733,9 +42732,6 @@
 	      $scope.sortBy = 'Symbol';
 	      //Ascending/Descending
 	      $scope.ascending = true;
-
-	      //how many values to have in the top/bottom tables
-	      $scope.N = 15;
 
 	      var labels = ['Symbol', 'Price', 'Beta', '1 Mo. Sharpe'];
 
