@@ -42284,7 +42284,7 @@
 /* 17 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<button ng-click=\"$state.go('table')\" class=\"action-small\">Table View</button>\n\n<table class=\"form\">\n  <tr class=\"form-row\">\n    <th class=\"form-head\" ng-repeat=\"portfolio in portfolios track by $index\" ng-bind=\"portfolio.title\"></th>\n    <th class=\"form-head\">Cash Percentage</th>\n    <th class=\"form-head\">Total Investment</th>\n    <th class=\"form-head\">\n      <button ng-click=\"percent = !percent\" ng-show=\"percent\" class=\"action-small\">\n        Dollar\n      </button>\n      <button ng-click=\"percent = !percent\" ng-show=\"!percent\" class=\"action-small\">\n        Percent\n      </button>\n    </th>\n  </tr>\n  <tr class=\"form-row\">\n    <td class=\"form-cell\" ng-show=\"!percent\" ng-repeat=\"portfolio in portfolios track by $index\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          $\n          <input ng-model=\"portfolio_dollars[portfolio.key]\">\n          </input>\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\" ng-show=\"percent\" ng-repeat=\"portfolio in portfolios track by $index\">\n      <form href=\"#\">\n        <span class=\"percent-input\">\n          <input ng-model=\"portfolio_percent[portfolio.key]\">\n          </input>\n          %\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <span class=\"cash-input\">\n          <input ng-model=\"cash\">\n          </input>\n          %\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          $\n          <input ng-model=\"dollars\" readonly>\n          </input>\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <button ng-click=\"listTable(got_table, current)\" class=\"action-small\">Update</button>\n    </td>\n  </tr>\n</table>\n\n<br>\n<div class=\"dollar-error\" ng-show=\"dollarError\">\n  That is not a valid dollar amount.\n</div>\n<div class=\"dollar-error\" ng-show=\"percentError\">\n  That is not a valid percentage.\n</div>\n\n<h1 ng-bind=\"portfolio.title\"></h1>\n<table>\n  <tr>\n    <th>Symbol</th>\n    <th>Quantity</th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in table.long track by $index\">\n    <td class=\"top_cell\" ng-bind=\"symbol.symbol\"></td>\n    <td class=\"top_cell\" ng-bind=\"symbol.quantity\"></td>\n  </tr>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th>Symbol</th>\n    <th>Quantity</th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in table.short track by $index\">\n    <td class=\"bottom_cell\" ng-bind=\"symbol.symbol\"></td>\n    <td class=\"bottom_cell\" ng-bind=\"symbol.quantity\"></td>\n  </tr>\n</table>\n";
+	module.exports = "<div class=\"logo--center\">\n  <img src=\"/businessduck.jpg\" style=\"width: 100px; height: 100px;\"></img>\n</div>\n<h1 class=\"logo--center\">QUAX</h1>\n\n<button ng-click=\"$state.go('table')\" class=\"action-small\">Table View</button>\n\n<table class=\"form\">\n  <tr class=\"form-row\">\n    <th class=\"form-head\" ng-repeat=\"portfolio in portfolios track by $index\" ng-bind=\"portfolio.title\"></th>\n    <th class=\"form-head\">Cash Percentage</th>\n    <th class=\"form-head\">Total Investment</th>\n    <th class=\"form-head\">\n      <button ng-click=\"percent = !percent\" ng-show=\"percent\" class=\"action-small\">\n        Dollar\n      </button>\n      <button ng-click=\"percent = !percent\" ng-show=\"!percent\" class=\"action-small\">\n        Percent\n      </button>\n    </th>\n  </tr>\n  <tr class=\"form-row\">\n    <td class=\"form-cell\" ng-show=\"!percent\" ng-repeat=\"portfolio in portfolios track by $index\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          $\n          <input ng-model=\"portfolio_dollars[portfolio.key]\">\n          </input>\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\" ng-show=\"percent\" ng-repeat=\"portfolio in portfolios track by $index\">\n      <form href=\"#\">\n        <span class=\"percent-input\">\n          <input ng-model=\"portfolio_percent[portfolio.key]\">\n          </input>\n          %\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <span class=\"cash-input\">\n          <input ng-model=\"cash\">\n          </input>\n          %\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <span class=\"dollar-input\">\n          $\n          <input ng-model=\"dollars\" readonly>\n          </input>\n        </div>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <button ng-click=\"listTable(got_table, current, current_portfolios)\" class=\"action-small\">Update</button>\n    </td>\n  </tr>\n</table>\n\n<br>\n<div class=\"dollar-error\" ng-show=\"dollarError\">\n  That is not a valid dollar amount.\n</div>\n<div class=\"dollar-error\" ng-show=\"percentError\">\n  That is not a valid percentage.\n</div>\n\n<table class=\"form\">\n  <tr class=\"form-row\">\n    <th class=\"form-head\">Portfolio</th>\n    <th class=\"form-head\">Rebalance Longs</th>\n    <th class=\"form-head\">Rebalance Shorts</th>\n    <th class=\"form-head\">\n      <button ng-click=\"listTable(got_table, current, current_portfolios)\" class=\"action-small\">Update</button>\n    </th>\n  </tr>\n  <tr class=\"form-row\" ng-repeat=\"portfolio in portfolios track by $index\">\n    <td class=\"form-cell\" ng-bind=\"portfolio.title\"></td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <input type=\"checkbox\" ng-model=\"rebalance[portfolio.key].long\">\n        </input>\n      </form>\n    </td>\n    <td class=\"form-cell\">\n      <form href=\"#\">\n        <input type=\"checkbox\" ng-model=\"rebalance[portfolio.key].short\">\n        </input>\n      </form>\n    </td>\n  </tr>\n</table>\n\n<h1 ng-bind=\"portfolio.title\"></h1>\n<table>\n  <tr>\n    <th>Symbol</th>\n    <th>Quantity</th>\n  </tr>\n  <tr class=\"top_row\" ng-repeat=\"symbol in table.long track by $index\">\n    <td class=\"top_cell\" ng-bind=\"symbol.symbol\"></td>\n    <td class=\"top_cell\" ng-bind=\"symbol.quantity\"></td>\n  </tr>\n  </tr>\n</table>\n\n<table>\n  <tr>\n    <th>Symbol</th>\n    <th>Quantity</th>\n  </tr>\n  <tr class=\"bottom_row\" ng-repeat=\"symbol in table.short track by $index\">\n    <td class=\"bottom_cell\" ng-bind=\"symbol.symbol\"></td>\n    <td class=\"bottom_cell\" ng-bind=\"symbol.quantity\"></td>\n  </tr>\n</table>\n";
 
 /***/ },
 /* 18 */
@@ -42529,6 +42529,8 @@
 	      $scope.dollarError = false;
 	      $scope.percentError = false;
 	      $scope.portfolios = {};
+	      $scope.rebalance = {};
+	      $scope.rebalance_set = false;
 
 	      //round to N decimal points
 	      $scope.accuracy = 3;
@@ -42589,6 +42591,10 @@
 	            for (var port in cur_port.short[key]) {
 	              cur_port.short[key][port] = cur_port.short[key][port]/total;
 	            }
+
+	            if (total === 0) {
+	              cur_port.short[key].undef = 1;
+	            }
 	          }
 
 	          for (var key in cur_port.long) {
@@ -42599,6 +42605,22 @@
 	            for (var port in cur_port.long[key]) {
 	              cur_port.long[key][port] = cur_port.long[key][port]/total;
 	            }
+
+	            if (total === 0) {
+	              cur_port.long[key].undef = 1;
+	            }
+	          }
+
+	          //adjust from percentages to numbers
+	          for (var key in cur_port.short) {
+	            for (var port in cur_port.short[key]) {
+	              cur_port.short[key][port] = Math.round(current.short[key].quantity*cur_port.short[key][port]);
+	            }
+	          }
+	          for (var key in cur_port.long) {
+	            for (var port in cur_port.long[key]) {
+	              cur_port.long[key][port] = Math.round(current.long[key].quantity*cur_port.long[key][port]);
+	            }
 	          }
 
 	          cb(cur_port);
@@ -42606,7 +42628,7 @@
 	      }
 
 	      function listTable(givenTable, current, cur_ports) {
-	        var portfolio_keys = [];
+	        var portfolio_keys = ['undef'];
 	        for (var key in givenTable) {
 	          if (key[0] !== '_') {
 	            portfolio_keys.push(key);
@@ -42629,24 +42651,52 @@
 	          });
 	        }
 
-	        var total_dollars = 0;
-
 	        var total_percent = cash;
 
 	        var table = {
-	          long: JSON.parse(JSON.stringify(current.long)),
-	          short: JSON.parse(JSON.stringify(current.short))
+	          long: {},
+	          short: {}
 	        };
 
-	        //flip quantity to buy for currently owned stocks
-	        for (var l in table.long) {
-	          table.long[l].quantity = -1*table.long[l].quantity;
-	        }
-	        for (var s in table.short) {
-	          table.short[s].quantity = -1*table.short[s].quantity;
-	        }
-
 	        portfolio_keys.forEach(function(elem) {
+	          //portfolios for rebalancing
+	          if (!$scope.rebalance_set) {
+	            $scope.rebalance[elem] = {long: true, short: true};
+	          }
+
+	          if (!$scope.rebalance[elem].long && !$scope.rebalance[elem].short) {
+	            return;
+	          }
+
+	          if ($scope.rebalance[elem].long) {
+	            for (var l in cur_ports.long) {
+	              if (!table.long[l]) {
+	                table.long[l] = {
+	                  symbol: l,
+	                  quantity: 0
+	                };
+	              }
+	              if (cur_ports.long[l][elem]) {
+	                table.long[l].quantity -= cur_ports.long[l][elem];
+	              }
+	            }
+	          }
+	          if ($scope.rebalance[elem].short) {
+	            for (var s in cur_ports.short) {
+	              if (!table.short[s]) {
+	                table.short[s] = {
+	                  symbol: s,
+	                  quantity: 0
+	                };
+	              }
+	              if (cur_ports.short[s][elem]) {
+	                table.short[s].quantity -= cur_ports.short[s][elem];
+	              }
+	            }
+	          }
+
+	          if (elem === 'undef') return;
+
 	          d = parseFloat($scope.portfolio_dollars[elem]);
 	          p = parseFloat($scope.portfolio_percent[elem]);
 	          if (!d || !$scope.portfolio_dollars[elem]) {
@@ -42680,39 +42730,42 @@
 	          else {
 	            dollars = Math.floor($scope.portfolio_dollars[elem]);
 	          }
-	          total_dollars += dollars;
 
 	          //construct long portfolio
-	          givenTable[elem].long.forEach(function(el) {
-	            var sym = el.symbol
-	              , amount = Math.floor(el.weight*dollars/el.price);
+	          if ($scope.rebalance[elem].long) {
+	            givenTable[elem].long.forEach(function(el) {
+	              var sym = el.symbol
+	                , amount = Math.floor(el.weight*dollars/el.price);
 
-	            if (table.long[sym]) {
-	              table.long[sym].quantity += amount;
-	            }
-	            else {
-	              table.long[sym] = {
-	                symbol: sym,
-	                quantity: amount
-	              };
-	            }
-	          });
+	              if (table.long[sym]) {
+	                table.long[sym].quantity += amount;
+	              }
+	              else {
+	                table.long[sym] = {
+	                  symbol: sym,
+	                  quantity: amount
+	                };
+	              }
+	            });
+	          }
 
 	          //same for short
-	          givenTable[elem].short.forEach(function(el) {
-	            var sym = el.symbol
-	              , amount = Math.floor(el.weight*dollars/el.price);
+	          if ($scope.rebalance[elem].short) {
+	            givenTable[elem].short.forEach(function(el) {
+	              var sym = el.symbol
+	                , amount = Math.floor(el.weight*dollars/el.price);
 
-	            if (table.short[sym]) {
-	              table.short[sym].quantity += amount;
-	            }
-	            else {
-	              table.short[sym] = {
-	                symbol: sym,
-	                quantity: amount
-	              };
-	            }
-	          });
+	              if (table.short[sym]) {
+	                table.short[sym].quantity += amount;
+	              }
+	              else {
+	                table.short[sym] = {
+	                  symbol: sym,
+	                  quantity: amount
+	                };
+	              }
+	            });
+	          }
 
 	          portfolios.push({
 	            title: givenTable[elem]['_title'],
@@ -42724,8 +42777,9 @@
 	        //display
 	        $timeout(function() {
 	          if ($scope.percent && Math.round(total_percent) !== 100) {
-	            $scope.percentError = true;
-	            return;
+	            //portfolio dependent balancing messes this up
+	            //$scope.percentError = true;
+	            //return;
 	          }
 	          else {
 	            $scope.percentError = false;
@@ -42733,6 +42787,7 @@
 	          $scope.table = table;
 	          $scope.previous_pd = $scope.portfolio_dollars;
 	          $scope.portfolios = portfolios;
+	          $scope.rebalance_set = true;
 	        });
 	      }
 

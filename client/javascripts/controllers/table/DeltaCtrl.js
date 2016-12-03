@@ -53,6 +53,8 @@ module.exports = function(app) {
       $scope.dollarError = false;
       $scope.percentError = false;
       $scope.portfolios = {};
+      $scope.rebalance = {};
+      $scope.rebalance_set = false;
 
       //round to N decimal points
       $scope.accuracy = 3;
@@ -113,6 +115,10 @@ module.exports = function(app) {
             for (var port in cur_port.short[key]) {
               cur_port.short[key][port] = cur_port.short[key][port]/total;
             }
+
+            if (total === 0) {
+              cur_port.short[key].undef = 1;
+            }
           }
 
           for (var key in cur_port.long) {
@@ -123,6 +129,22 @@ module.exports = function(app) {
             for (var port in cur_port.long[key]) {
               cur_port.long[key][port] = cur_port.long[key][port]/total;
             }
+
+            if (total === 0) {
+              cur_port.long[key].undef = 1;
+            }
+          }
+
+          //adjust from percentages to numbers
+          for (var key in cur_port.short) {
+            for (var port in cur_port.short[key]) {
+              cur_port.short[key][port] = Math.round(current.short[key].quantity*cur_port.short[key][port]);
+            }
+          }
+          for (var key in cur_port.long) {
+            for (var port in cur_port.long[key]) {
+              cur_port.long[key][port] = Math.round(current.long[key].quantity*cur_port.long[key][port]);
+            }
           }
 
           cb(cur_port);
@@ -130,7 +152,7 @@ module.exports = function(app) {
       }
 
       function listTable(givenTable, current, cur_ports) {
-        var portfolio_keys = [];
+        var portfolio_keys = ['undef'];
         for (var key in givenTable) {
           if (key[0] !== '_') {
             portfolio_keys.push(key);
@@ -153,24 +175,52 @@ module.exports = function(app) {
           });
         }
 
-        var total_dollars = 0;
-
         var total_percent = cash;
 
         var table = {
-          long: JSON.parse(JSON.stringify(current.long)),
-          short: JSON.parse(JSON.stringify(current.short))
+          long: {},
+          short: {}
         };
 
-        //flip quantity to buy for currently owned stocks
-        for (var l in table.long) {
-          table.long[l].quantity = -1*table.long[l].quantity;
-        }
-        for (var s in table.short) {
-          table.short[s].quantity = -1*table.short[s].quantity;
-        }
-
         portfolio_keys.forEach(function(elem) {
+          //portfolios for rebalancing
+          if (!$scope.rebalance_set) {
+            $scope.rebalance[elem] = {long: true, short: true};
+          }
+
+          if (!$scope.rebalance[elem].long && !$scope.rebalance[elem].short) {
+            return;
+          }
+
+          if ($scope.rebalance[elem].long) {
+            for (var l in cur_ports.long) {
+              if (!table.long[l]) {
+                table.long[l] = {
+                  symbol: l,
+                  quantity: 0
+                };
+              }
+              if (cur_ports.long[l][elem]) {
+                table.long[l].quantity -= cur_ports.long[l][elem];
+              }
+            }
+          }
+          if ($scope.rebalance[elem].short) {
+            for (var s in cur_ports.short) {
+              if (!table.short[s]) {
+                table.short[s] = {
+                  symbol: s,
+                  quantity: 0
+                };
+              }
+              if (cur_ports.short[s][elem]) {
+                table.short[s].quantity -= cur_ports.short[s][elem];
+              }
+            }
+          }
+
+          if (elem === 'undef') return;
+
           d = parseFloat($scope.portfolio_dollars[elem]);
           p = parseFloat($scope.portfolio_percent[elem]);
           if (!d || !$scope.portfolio_dollars[elem]) {
@@ -204,39 +254,42 @@ module.exports = function(app) {
           else {
             dollars = Math.floor($scope.portfolio_dollars[elem]);
           }
-          total_dollars += dollars;
 
           //construct long portfolio
-          givenTable[elem].long.forEach(function(el) {
-            var sym = el.symbol
-              , amount = Math.floor(el.weight*dollars/el.price);
+          if ($scope.rebalance[elem].long) {
+            givenTable[elem].long.forEach(function(el) {
+              var sym = el.symbol
+                , amount = Math.floor(el.weight*dollars/el.price);
 
-            if (table.long[sym]) {
-              table.long[sym].quantity += amount;
-            }
-            else {
-              table.long[sym] = {
-                symbol: sym,
-                quantity: amount
-              };
-            }
-          });
+              if (table.long[sym]) {
+                table.long[sym].quantity += amount;
+              }
+              else {
+                table.long[sym] = {
+                  symbol: sym,
+                  quantity: amount
+                };
+              }
+            });
+          }
 
           //same for short
-          givenTable[elem].short.forEach(function(el) {
-            var sym = el.symbol
-              , amount = Math.floor(el.weight*dollars/el.price);
+          if ($scope.rebalance[elem].short) {
+            givenTable[elem].short.forEach(function(el) {
+              var sym = el.symbol
+                , amount = Math.floor(el.weight*dollars/el.price);
 
-            if (table.short[sym]) {
-              table.short[sym].quantity += amount;
-            }
-            else {
-              table.short[sym] = {
-                symbol: sym,
-                quantity: amount
-              };
-            }
-          });
+              if (table.short[sym]) {
+                table.short[sym].quantity += amount;
+              }
+              else {
+                table.short[sym] = {
+                  symbol: sym,
+                  quantity: amount
+                };
+              }
+            });
+          }
 
           portfolios.push({
             title: givenTable[elem]['_title'],
@@ -248,8 +301,9 @@ module.exports = function(app) {
         //display
         $timeout(function() {
           if ($scope.percent && Math.round(total_percent) !== 100) {
-            $scope.percentError = true;
-            return;
+            //portfolio dependent balancing messes this up
+            //$scope.percentError = true;
+            //return;
           }
           else {
             $scope.percentError = false;
@@ -257,6 +311,7 @@ module.exports = function(app) {
           $scope.table = table;
           $scope.previous_pd = $scope.portfolio_dollars;
           $scope.portfolios = portfolios;
+          $scope.rebalance_set = true;
         });
       }
 
