@@ -7,3 +7,6 @@ It's a thing, that does stuff. Financial stuff, cool stuff, like making you mone
     $ nf start -j Procfile_dev
 
 This will watch for changes and update.
+
+## Heroku
+This should autodeploy master to heroku
