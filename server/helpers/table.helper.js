@@ -290,7 +290,7 @@ module.exports.getPortfolios = (date, cb) => {
       out.IV.long[i].weight = long_weight;
     }
     out.IV = calculateBeta(out.IV);
-    out.IV = balanceBetas(out.IV);
+    //out.IV = balanceBetas(out.IV);
 
     for (var i in out.SEN.short) {
       out.SEN.short[i].weight = short_weight;
@@ -299,7 +299,7 @@ module.exports.getPortfolios = (date, cb) => {
       out.SEN.long[i].weight = long_weight;
     }
     out.SEN = calculateBeta(out.SEN);
-    out.SEN = balanceBetas(out.SEN);
+    //out.SEN = balanceBetas(out.SEN);
 
     long_weight = .1;
     for (var i in out.MF.short) {
@@ -309,7 +309,7 @@ module.exports.getPortfolios = (date, cb) => {
       out.MF.long[i].weight = long_weight;
     }
     out.MF = calculateBeta(out.MF);
-    out.MF = balanceBetas(out.MF);
+    //out.MF = balanceBetas(out.MF);
 
     //:shipit:
     cb(out);
